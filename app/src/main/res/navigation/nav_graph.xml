@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/gamesListScreen"
+    >
+
+    <fragment
+        android:id="@+id/gamesListScreen"
+        android:name="com.namaya.oscarsthegrouch_app.GamesListFragment"
+        android:label="Games"
+        >
+
+        <action
+            android:id="@+id/toGameCreateScreen"
+            app:destination="@id/gameCreateScreen"
+            />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/gameCreateScreen"
+        android:name="com.namaya.oscarsthegrouch_app.CreateGameFragment"
+        android:label="Games"
+        >
+
+    </fragment>
+
+</navigation>

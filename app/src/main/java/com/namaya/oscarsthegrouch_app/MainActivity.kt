@@ -24,37 +24,5 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        val layoutManager = LinearLayoutManager(this)
-        binding.gamesListScreen.gamesListView.layoutManager = layoutManager
-        binding.gamesListScreen.gamesListView.adapter = GamesListViewAdapter()
-
-        binding.gamesListScreen.addGameButton.setOnClickListener { view ->
-            val addGameMenu = PopupMenu(this, view)
-
-            // Inflate the menu resource
-            addGameMenu.menuInflater.inflate(R.menu.add_game_menu, addGameMenu.menu)
-
-            // Set an item click listener
-            addGameMenu.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.addGameCreate -> {
-                        // Handle "Create" action
-                        Toast.makeText(this, "Create", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-                    R.id.addGameJoin -> {
-                        // Handle "Join" action
-                        Toast.makeText(this, "Join", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-                    else -> false
-                }
-            }
-
-            // Show the PopupMenu
-            addGameMenu.show()
-        }
-
     }
 }
