@@ -21,7 +21,19 @@
     <fragment
         android:id="@+id/gameCreateScreen"
         android:name="com.namaya.oscarsthegrouch_app.CreateGameFragment"
-        android:label="Games"
+        android:label="CreateGame"
+        >
+
+        <action
+            android:id="@+id/toGameHomeScreen"
+            app:destination="@id/gameHomeScreen"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/gameHomeScreen"
+        android:name="com.namaya.oscarsthegrouch_app.GameHomeFragment"
+        android:label="GameHome"
         >
 
     </fragment>

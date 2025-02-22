@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.namaya.oscarsthegrouch_app.databinding.CreateGameScreenBinding
 
 class CreateGameFragment: Fragment() {
@@ -18,5 +19,9 @@ class CreateGameFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 //        val ctx = requireContext()
+        binding.createGameButton.setOnClickListener {
+            val navController = findNavController()
+            navController.navigate(R.id.toGameHomeScreen)
+        }
     }
 }
