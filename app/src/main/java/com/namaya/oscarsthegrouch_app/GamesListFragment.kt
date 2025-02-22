@@ -28,6 +28,7 @@ class GamesListFragment: Fragment() {
         binding.gamesListView.adapter = GamesListViewAdapter()
 
         binding.addGameButton.setOnClickListener { gameButtonView ->
+            // TODO: reuse popup menu (don't create new object everytime)
             val addGameMenu = PopupMenu(ctx, gameButtonView)
 
             // Inflate the menu resource
