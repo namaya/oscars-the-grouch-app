@@ -16,7 +16,6 @@
         android:id="@+id/addGameButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:contentDescription="Add new game"
         app:layout_constraintBottom_toBottomOf="parent"
