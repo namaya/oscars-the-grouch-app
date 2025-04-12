@@ -1,23 +1,19 @@
-package com.namaya.oscarsthegrouch_app
+package com.namaya.oscarsthegrouch_app.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.namaya.oscarsthegrouch_app.databinding.GameCardBinding
-import com.namaya.oscarsthegrouch_app.databinding.PlayerCardBinding
 
-class User(val name: String)
+class Game(val name: String)
 
-class Player(val user: User, val gameId: Int, val score: Int)
-
-class PlayerListViewAdapter: RecyclerView.Adapter<PlayerListViewAdapter.ViewHolder>(){
-    private val playersList = mutableListOf(
-        Player(User("Player 1"), 0, 0),
-        Player(User("Player 2"), 0, 0),
-        Player(User("Player 3"), 0, 0)
+class GamesListViewAdapter: RecyclerView.Adapter<GamesListViewAdapter.ViewHolder>(){
+    private val gamesList = mutableListOf(
+        Game("Game 1"),
+        Game("Game 2"),
     )
 
-    inner class ViewHolder(val viewBinding: PlayerCardBinding): RecyclerView.ViewHolder(viewBinding.root)
+    inner class ViewHolder(val viewBinding: GameCardBinding): RecyclerView.ViewHolder(viewBinding.root)
 
     /**
      * Create a new view holder.
@@ -30,7 +26,7 @@ class PlayerListViewAdapter: RecyclerView.Adapter<PlayerListViewAdapter.ViewHold
      * @param viewType ?
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewBinding = PlayerCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val viewBinding = GameCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(viewBinding)
     }
 
@@ -40,7 +36,7 @@ class PlayerListViewAdapter: RecyclerView.Adapter<PlayerListViewAdapter.ViewHold
      * @return The number of elements in the campaign list.
      */
     override fun getItemCount(): Int {
-        return playersList.size
+        return gamesList.size
     }
 
     /**
@@ -52,11 +48,10 @@ class PlayerListViewAdapter: RecyclerView.Adapter<PlayerListViewAdapter.ViewHold
      * @param position The position of the element in the data list.
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        require(position >= 0 && position < playersList.size) { "Invalid position in players list." }
+        require(position >= 0 && position < gamesList.size) { "Invalid position in campaign list." }
 
-        val cardViewBinding = holder.viewBinding
+        val campaignCardViewBinding = holder.viewBinding
 
-        cardViewBinding.playerName.text = playersList[position].user.name
-        cardViewBinding.playerScore.text = String.format("%s", playersList[position].score)
+        campaignCardViewBinding.gameCardName.text = gamesList[position].name
     }
 }

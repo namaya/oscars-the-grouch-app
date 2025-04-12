@@ -1,4 +1,4 @@
-package com.namaya.oscarsthegrouch_app
+package com.namaya.oscarsthegrouch_app.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.namaya.oscarsthegrouch_app.R
 import com.namaya.oscarsthegrouch_app.databinding.GamesListScreenBinding
 
 class GamesListFragment: Fragment() {
