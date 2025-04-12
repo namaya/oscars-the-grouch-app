@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class Category(val name: String, val nominees: List<Nominee>, val guess: Int)
+class Category(val id: String, val name: String, val nominees: List<Nominee>)
 class Nominee(val subject: String, val background: String)
 
 sealed class UiState {
@@ -16,14 +16,17 @@ sealed class UiState {
 }
 
 class BallotViewModel: ViewModel() {
-//    private val _categoryBank: MutableLiveData<List<Category>> = MutableLiveData(listOf())
-//    val categoryBank: LiveData<List<Category>> = _categoryBank
+    private val _categoryBank: MutableLiveData<List<Category>> = MutableLiveData(listOf())
+    val categoryBank: LiveData<List<Category>> = _categoryBank
+
+    private val _uiState = MutableLiveData<UiState>()
+    val uiState: LiveData<UiState> = _uiState
 
     private val _currentCategoryIdx: MutableLiveData<Int> = MutableLiveData(0)
     val currentCategoryIdx: LiveData<Int> = _currentCategoryIdx
 
-    private val _uiState = MutableLiveData<UiState>()
-    val uiState: LiveData<UiState> = _uiState
+    private val _categoryGuesses: MutableLiveData<Map<String, Int>> = MutableLiveData(mapOf())
+    val categoryGuesses: LiveData<Map<String, Int>> = _categoryGuesses
 
     init {
         // TODO: load categories from server
@@ -31,11 +34,12 @@ class BallotViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 val categoryBank = listOf(
-                    Category("Category A", listOf(Nominee("Subject 1", "Background 1"), Nominee("Subject 2", "Background 2")), 0),
-                    Category("Category B", listOf(Nominee("Subject 1", "Background 1"), Nominee("Subject 2", "Background 2")), 0),
-                    Category("Category C", listOf(Nominee("Subject 1", "Background 1"), Nominee("Subject 2", "Background 2")), 0),
-                    Category("Category D", listOf(Nominee("Subject 1", "Background 1"), Nominee("Subject 2", "Background 2")), 0),
+                    Category("1", "Category A", listOf(Nominee("Subject 1", "Background 1"), Nominee("Subject 2", "Background 2"))),
+                    Category("2", "Category B", listOf(Nominee("Subject 1", "Background 1"), Nominee("Subject 2", "Background 2"))),
+                    Category("3","Category C", listOf(Nominee("Subject 1", "Background 1"), Nominee("Subject 2", "Background 2"))),
+                    Category("4","Category D", listOf(Nominee("Subject 1", "Background 1"), Nominee("Subject 2", "Background 2"))),
                 )
+                _categoryBank.value = categoryBank
                 _uiState.value = UiState.Success(categoryBank)
             } catch (e: Exception) {
                 _uiState.value = UiState.Error("Error loading categories")
@@ -43,7 +47,26 @@ class BallotViewModel: ViewModel() {
         }
     }
 
+    fun nextCategory() {
+        val curIdx = _currentCategoryIdx.value!!
+        _currentCategoryIdx.value = (curIdx + 1) % _categoryBank.value!!.size
+    }
+
+    fun prevCategory() {
+        val curIdx = _currentCategoryIdx.value!!
+        _currentCategoryIdx.value = (curIdx - 1 + _categoryBank.value!!.size) % _categoryBank.value!!.size
+    }
+
     fun moveToCategory(index: Int) {
         _currentCategoryIdx.value = index
+    }
+
+    fun answerCurrentCategory(guess: Int) {
+        val currentCategory = _categoryBank.value!![_currentCategoryIdx.value!!]
+        require(guess >= 0 && guess < currentCategory.nominees.size)
+
+        val newCategoryGuesses = _categoryGuesses.value!!.toMutableMap()
+        newCategoryGuesses[currentCategory.id] = guess
+        _categoryGuesses.value = newCategoryGuesses
     }
 }
