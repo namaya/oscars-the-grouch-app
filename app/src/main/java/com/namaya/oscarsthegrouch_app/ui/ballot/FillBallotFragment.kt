@@ -1,8 +1,7 @@
-package com.namaya.oscarsthegrouch_app.ui
+package com.namaya.oscarsthegrouch_app.ui.ballot
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +18,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.namaya.oscarsthegrouch_app.R
 import com.namaya.oscarsthegrouch_app.databinding.BallotCategoryBinding
 import com.namaya.oscarsthegrouch_app.databinding.FragmentFillBallotBinding
-import com.namaya.oscarsthegrouch_app.databinding.GameCardBinding
 
 class FillBallotFragment: Fragment() {
     private var _binding: FragmentFillBallotBinding? = null

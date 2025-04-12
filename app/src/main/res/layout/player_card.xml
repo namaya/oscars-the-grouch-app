@@ -17,12 +17,27 @@
         android:layout_height="match_parent"
         >
 
+        <ImageView
+            android:id="@+id/playerAvatar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
         <TextView
             android:id="@+id/playerName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             />
+
+        <ImageView
+            android:id="@+id/readyCheckmark"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/checkbox_on_background"
+            android:visibility="gone"
+        />
 
         <TextView
             android:id="@+id/playerScore"

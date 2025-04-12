@@ -1,15 +1,18 @@
-package com.namaya.oscarsthegrouch_app.ui
+package com.namaya.oscarsthegrouch_app.ui.gamehome
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.namaya.oscarsthegrouch_app.databinding.PlayerCardBinding
 
 class User(val name: String)
 
-class Player(val user: User, val gameId: Int, val score: Int)
+class Player(val user: User, val gameId: Int, val score: Int, val state: String = "Waiting")
 
-class PlayerListViewAdapter: RecyclerView.Adapter<PlayerListViewAdapter.ViewHolder>(){
+class PlayerListViewAdapter(
+    private val onItemClick: (Int) -> Unit
+): RecyclerView.Adapter<PlayerListViewAdapter.ViewHolder>(){
     private val playersList = mutableListOf(
         Player(User("Player 1"), 0, 0),
         Player(User("Player 2"), 0, 0),
@@ -30,6 +33,12 @@ class PlayerListViewAdapter: RecyclerView.Adapter<PlayerListViewAdapter.ViewHold
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val viewBinding = PlayerCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+        val viewHolder = ViewHolder(viewBinding)
+        viewBinding.root.setOnClickListener {
+            onItemClick(viewHolder.adapterPosition)
+        }
+
         return ViewHolder(viewBinding)
     }
 
@@ -56,6 +65,13 @@ class PlayerListViewAdapter: RecyclerView.Adapter<PlayerListViewAdapter.ViewHold
         val cardViewBinding = holder.viewBinding
 
         cardViewBinding.playerName.text = playersList[position].user.name
+
+        if (playersList[position].state == "Ready") {
+            cardViewBinding.readyCheckmark.visibility = View.VISIBLE
+        } else {
+            cardViewBinding.readyCheckmark.visibility = View.GONE
+        }
+
         cardViewBinding.playerScore.text = String.format("%s", playersList[position].score)
     }
 }

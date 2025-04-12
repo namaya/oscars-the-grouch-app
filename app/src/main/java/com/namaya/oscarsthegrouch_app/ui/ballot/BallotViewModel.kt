@@ -1,4 +1,4 @@
-package com.namaya.oscarsthegrouch_app.ui
+package com.namaya.oscarsthegrouch_app.ui.ballot
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

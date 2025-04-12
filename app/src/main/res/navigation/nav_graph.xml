@@ -32,10 +32,20 @@
 
     <fragment
         android:id="@+id/gameHomeScreen"
-        android:name="com.namaya.oscarsthegrouch_app.ui.GameHomeFragment"
+        android:name="com.namaya.oscarsthegrouch_app.ui.gamehome.GameHomeFragment"
         android:label="GameHome"
         >
+        <action
+            android:id="@+id/toBallotScreen"
+            app:destination="@id/ballotScreen"
+            />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/ballotScreen"
+        android:name="com.namaya.oscarsthegrouch_app.ui.ballot.FillBallotFragment"
+        android:label="Ballot"
+        />
 
 </navigation>
