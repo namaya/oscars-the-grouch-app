@@ -16,6 +16,11 @@
             app:destination="@id/gameCreateScreen"
             />
 
+        <action
+            android:id="@+id/toGameHomeScreen"
+            app:destination="@id/gameHomeScreen"
+            />
+
     </fragment>
 
     <fragment
@@ -35,6 +40,11 @@
         android:name="com.namaya.oscarsthegrouch_app.ui.gamehome.GameHomeFragment"
         android:label="GameHome"
         >
+        <argument
+            android:name="gameId"
+            app:argType="string"
+            />
+
         <action
             android:id="@+id/toBallotScreen"
             app:destination="@id/ballotScreen"

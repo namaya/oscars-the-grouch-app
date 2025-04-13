@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.namaya.oscarsthegrouch_app.databinding.FragmentFillBallotBinding
+import com.namaya.oscarsthegrouch_app.ui.UiState
 
 class FillBallotFragment: Fragment() {
     private var _binding: FragmentFillBallotBinding? = null
@@ -49,16 +50,16 @@ class FillBallotFragment: Fragment() {
                     )
                     // TODO: isAnswered could be true
                     val items =
-                        List(uiState.questions.size) { index -> CategoryIndexItem(index, false) }
+                        List(uiState.data.size) { index -> CategoryIndexItem(index, false) }
 
                     binding.statusIndicator.adapter = adapter
-                    binding.viewPager.adapter = CategoryFragmentAdapter(this, uiState.questions)
+                    binding.viewPager.adapter = CategoryFragmentAdapter(this, uiState.data)
 
                     adapter.submitList(items)
 
                     viewModel.categoryGuesses.observe(viewLifecycleOwner) { categoryGuesses ->
                         val newItems = List(adapter.currentList.size) { index ->
-                            val isAnswered = categoryGuesses[uiState.questions[index].id] != null
+                            val isAnswered = categoryGuesses[uiState.data[index].id] != null
                             CategoryIndexItem(index, isAnswered)
                         }
                         adapter.submitList(newItems)

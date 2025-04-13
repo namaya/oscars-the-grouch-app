@@ -7,15 +7,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.namaya.oscarsthegrouch_app.R
 import com.namaya.oscarsthegrouch_app.databinding.GamesListScreenBinding
 
 class GamesListFragment: Fragment() {
-
     private var _binding: GamesListScreenBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: GamesListViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = GamesListScreenBinding.inflate(inflater, container, false)
@@ -25,8 +27,19 @@ class GamesListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val ctx = requireContext()
         val layoutManager = LinearLayoutManager(ctx)
+
+        val adapter = GamesListViewAdapter {
+            val navController = findNavController()
+            val action = GamesListFragmentDirections.toGameHomeScreen(it.id)
+            navController.navigate(action)
+        }
+
+        viewModel.gamesList.observe(viewLifecycleOwner) { gamesList ->
+            adapter.submitList(gamesList)
+        }
+
         binding.gamesListView.layoutManager = layoutManager
-        binding.gamesListView.adapter = GamesListViewAdapter()
+        binding.gamesListView.adapter = adapter
 
         binding.addGameButton.setOnClickListener { gameButtonView ->
             // TODO: reuse popup menu (don't create new object everytime)

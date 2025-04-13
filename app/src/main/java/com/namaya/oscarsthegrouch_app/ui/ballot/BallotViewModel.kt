@@ -7,19 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.namaya.oscarsthegrouch_app.model.Category
 import com.namaya.oscarsthegrouch_app.model.Nominee
 import kotlinx.coroutines.launch
-
-sealed class UiState {
-    object Loading : UiState()
-    data class Success(val questions: List<Category>) : UiState()
-    data class Error(val message: String) : UiState()
-}
+import com.namaya.oscarsthegrouch_app.ui.UiState
 
 class BallotViewModel: ViewModel() {
     private val _categoryBank: MutableLiveData<List<Category>> = MutableLiveData(listOf())
     val categoryBank: LiveData<List<Category>> = _categoryBank
 
-    private val _uiState = MutableLiveData<UiState>()
-    val uiState: LiveData<UiState> = _uiState
+    private val _uiState = MutableLiveData<UiState<List<Category>>>()
+    val uiState: LiveData<UiState<List<Category>>> = _uiState
 
     private val _currentCategoryIdx: MutableLiveData<Int> = MutableLiveData(0)
     val currentCategoryIdx: LiveData<Int> = _currentCategoryIdx
