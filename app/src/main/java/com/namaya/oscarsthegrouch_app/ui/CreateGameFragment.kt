@@ -22,7 +22,8 @@ class CreateGameFragment: Fragment() {
 //        val ctx = requireContext()
         binding.createGameButton.setOnClickListener {
             val navController = findNavController()
-            navController.navigate(R.id.toGameHomeScreen)
+            val action = CreateGameFragmentDirections.toGameHomeScreen()
+            navController.navigate(action)
         }
     }
 }

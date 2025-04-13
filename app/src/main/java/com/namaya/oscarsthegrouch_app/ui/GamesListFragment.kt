@@ -41,7 +41,8 @@ class GamesListFragment: Fragment() {
                     R.id.addGameCreate -> {
                         // Handle "Create" action
                         val navController = findNavController()
-                        navController.navigate(R.id.toGameCreateScreen)
+                        val action = GamesListFragmentDirections.toGameCreateScreen()
+                        navController.navigate(action)
                         true
                     }
                     R.id.addGameJoin -> {

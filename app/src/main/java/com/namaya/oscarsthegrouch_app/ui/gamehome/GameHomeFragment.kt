@@ -25,7 +25,8 @@ class GameHomeFragment: Fragment() {
         binding.playerListView.layoutManager = layoutManager
         binding.playerListView.adapter = PlayerListViewAdapter {
             val navController = findNavController()
-            navController.navigate(R.id.toBallotScreen)
+            val action = GameHomeFragmentDirections.toBallotScreen()
+            navController.navigate(action)
         }
 
 //        binding.addGameButton.setOnClickListener { gameButtonView ->
