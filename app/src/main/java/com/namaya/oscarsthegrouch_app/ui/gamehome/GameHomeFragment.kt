@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.namaya.oscarsthegrouch_app.R
 import com.namaya.oscarsthegrouch_app.databinding.GameScreenBinding
 
 class GameHomeFragment: Fragment() {
@@ -23,9 +22,9 @@ class GameHomeFragment: Fragment() {
         val ctx = requireContext()
         val layoutManager = LinearLayoutManager(ctx)
         binding.playerListView.layoutManager = layoutManager
-        binding.playerListView.adapter = PlayerListViewAdapter {
+        binding.playerListView.adapter = PlayerListViewAdapter { it
             val navController = findNavController()
-            val action = GameHomeFragmentDirections.toBallotScreen()
+            val action = GameHomeFragmentDirections.toBallotScreen(it.user.name)
             navController.navigate(action)
         }
 

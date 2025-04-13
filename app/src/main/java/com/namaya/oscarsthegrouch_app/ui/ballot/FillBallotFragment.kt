@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,7 @@ class FillBallotFragment: Fragment() {
     private val binding get() = _binding!! // only valid between onCreateView and onDestroyView
 
     private val viewModel: BallotViewModel by activityViewModels()
+    private val naviArgs: FillBallotFragmentArgs by navArgs()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentFillBallotBinding.inflate(inflater, container, false)
@@ -32,6 +34,8 @@ class FillBallotFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.ballotsPlayerName.text = naviArgs.playerName
 
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {

@@ -38,14 +38,19 @@
         <action
             android:id="@+id/toBallotScreen"
             app:destination="@id/ballotScreen"
-            />
-
+            >
+        </action>
     </fragment>
 
     <fragment
         android:id="@+id/ballotScreen"
         android:name="com.namaya.oscarsthegrouch_app.ui.ballot.FillBallotFragment"
         android:label="Ballot"
-        />
+        >
+        <argument
+            android:name="playerName"
+            app:argType="string"
+            />
+    </fragment>
 
 </navigation>

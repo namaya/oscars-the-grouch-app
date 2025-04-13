@@ -11,7 +11,7 @@ class User(val name: String)
 class Player(val user: User, val gameId: Int, val score: Int, val state: String = "Waiting")
 
 class PlayerListViewAdapter(
-    private val onItemClick: (Int) -> Unit
+    private val onItemClick: (Player) -> Unit
 ): RecyclerView.Adapter<PlayerListViewAdapter.ViewHolder>(){
     private val playersList = mutableListOf(
         Player(User("Player 1"), 0, 0),
@@ -19,59 +19,29 @@ class PlayerListViewAdapter(
         Player(User("Player 3"), 0, 0)
     )
 
-    inner class ViewHolder(val viewBinding: PlayerCardBinding): RecyclerView.ViewHolder(viewBinding.root)
+    inner class ViewHolder(private val viewBinding: PlayerCardBinding): RecyclerView.ViewHolder(viewBinding.root) {
+        fun bind(item: Player) {
+            viewBinding.playerName.text = item.user.name
+            viewBinding.playerScore.text = String.format("%s", item.score)
+            viewBinding.readyCheckmark.visibility = if (item.state == "Ready") View.VISIBLE else View.GONE
 
-    /**
-     * Create a new view holder.
-     *
-     * This function is called by the runtime as part of constructing the views for the list. There
-     * will only ever be a static number of view holders regardless of the size of the data list (when
-     * list size > screen size).
-     *
-     * @param parent ?
-     * @param viewType ?
-     */
+            viewBinding.root.setOnClickListener {
+                onItemClick(item)
+            }
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val viewBinding = PlayerCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
-        val viewHolder = ViewHolder(viewBinding)
-        viewBinding.root.setOnClickListener {
-            onItemClick(viewHolder.adapterPosition)
-        }
-
         return ViewHolder(viewBinding)
     }
 
-    /**
-     * Get the size of the campaign list.
-     *
-     * @return The number of elements in the campaign list.
-     */
     override fun getItemCount(): Int {
         return playersList.size
     }
 
-    /**
-     * Bind an element to a view holder.
-     *
-     * This function is called by the runtime when a new element needs to be displayed in the campaign list.
-     *
-     * @param holder The view holder to bind the new element to.
-     * @param position The position of the element in the data list.
-     */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         require(position >= 0 && position < playersList.size) { "Invalid position in players list." }
-
-        val cardViewBinding = holder.viewBinding
-
-        cardViewBinding.playerName.text = playersList[position].user.name
-
-        if (playersList[position].state == "Ready") {
-            cardViewBinding.readyCheckmark.visibility = View.VISIBLE
-        } else {
-            cardViewBinding.readyCheckmark.visibility = View.GONE
-        }
-
-        cardViewBinding.playerScore.text = String.format("%s", playersList[position].score)
+        holder.bind(playersList[position])
     }
 }
