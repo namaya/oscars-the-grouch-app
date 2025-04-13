@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/gamesListScreen"
-        android:name="com.namaya.oscarsthegrouch_app.ui.GamesListFragment"
+        android:name="com.namaya.oscarsthegrouch_app.ui.gameslist.GamesListFragment"
         android:label="Games"
         >
 

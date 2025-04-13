@@ -1,4 +1,4 @@
-package com.namaya.oscarsthegrouch_app.ui
+package com.namaya.oscarsthegrouch_app.ui.gameslist
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,11 +1,10 @@
-package com.namaya.oscarsthegrouch_app.ui
+package com.namaya.oscarsthegrouch_app.ui.gameslist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.namaya.oscarsthegrouch_app.databinding.GameCardBinding
-
-class Game(val name: String)
+import com.namaya.oscarsthegrouch_app.model.Game
 
 class GamesListViewAdapter: RecyclerView.Adapter<GamesListViewAdapter.ViewHolder>(){
     private val gamesList = mutableListOf(

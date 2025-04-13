@@ -5,14 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.namaya.oscarsthegrouch_app.databinding.PlayerCardBinding
-
-class User(val name: String)
-
-class Player(val user: User, val gameId: Int, val score: Int, val state: String = "Waiting")
+import com.namaya.oscarsthegrouch_app.model.Player
+import com.namaya.oscarsthegrouch_app.model.User
 
 class PlayerListViewAdapter(
     private val onItemClick: (Player) -> Unit
 ): RecyclerView.Adapter<PlayerListViewAdapter.ViewHolder>(){
+    // TODO: set this on the viewmodel
     private val playersList = mutableListOf(
         Player(User("Player 1"), 0, 0),
         Player(User("Player 2"), 0, 0),

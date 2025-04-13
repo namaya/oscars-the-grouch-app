@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.namaya.oscarsthegrouch_app.model.Category
+import com.namaya.oscarsthegrouch_app.model.Nominee
 import kotlinx.coroutines.launch
-
-class Category(val id: String, val name: String, val nominees: List<Nominee>)
-class Nominee(val subject: String, val background: String)
 
 sealed class UiState {
     object Loading : UiState()
