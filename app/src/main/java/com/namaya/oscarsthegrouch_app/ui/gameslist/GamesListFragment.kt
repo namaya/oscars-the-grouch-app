@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.namaya.oscarsthegrouch_app.R
 import com.namaya.oscarsthegrouch_app.databinding.GamesListScreenBinding
 import com.namaya.oscarsthegrouch_app.ui.UiState
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class GamesListFragment: Fragment() {
     private var _binding: GamesListScreenBinding? = null
     private val binding get() = _binding!!
