@@ -13,9 +13,9 @@ class PlayerListViewAdapter(
 ): RecyclerView.Adapter<PlayerListViewAdapter.ViewHolder>(){
     // TODO: set this on the viewmodel
     private val playersList = mutableListOf(
-        Player(User("Player 1"), 0, 0),
-        Player(User("Player 2"), 0, 0),
-        Player(User("Player 3"), 0, 0)
+        Player(User("1", "Player 1"), 0, 0),
+        Player(User("2", "Player 2"), 0, 0),
+        Player(User("3", "Player 3"), 0, 0)
     )
 
     inner class ViewHolder(private val viewBinding: PlayerCardBinding): RecyclerView.ViewHolder(viewBinding.root) {
