@@ -38,7 +38,7 @@ class GameHomeFragment: Fragment() {
         gamesViewModel.selectedGame.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Success -> {
-//                    binding.gameName.text = it.value.name
+                    binding.gameName.text = it.value.name
                     gamesViewModel.fetchPlayers(it.value)
                 }
 
@@ -54,6 +54,13 @@ class GameHomeFragment: Fragment() {
 
                 else -> {}
             }
+        }
+
+        binding.startGameButton.setOnClickListener {
+            // TODO: check if game is ready to start
+            val navController = findNavController()
+            val action = GameHomeFragmentDirections.toBallotScreen("Player 1")
+            navController.navigate(action)
         }
 
 //        binding.addGameButton.setOnClickListener { gameButtonView ->
