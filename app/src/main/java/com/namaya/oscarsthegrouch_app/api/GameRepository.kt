@@ -7,20 +7,13 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 class GameRepository @Inject constructor(private val apiClient: BackendApiClient) {
-    suspend fun listGames(): List<Game> {
-//        val user = UserManager.getInstance().getCurrentUser(ctx)
-//        val token = user?.id ?: ""
-//
-//        try {
-//            val resBody = apiClient.listGames(token)
-//        } catch (he: HttpException) {
-//            if (he.code() == 401) {
-//                // TODO: handle unauthorized
-//                apiClient.createUser(BackendApiClient.CreateUserRequest("name1"))
-//            }
-//        }
-//
-//        return resBody.games
-        return emptyList()
+    suspend fun listGames(userId: String): List<Game> {
+        val resBody = apiClient.listGames(userId)
+
+        val games = resBody.games.map {
+            Game(it.id, it.name, it.state, userId, emptyList(), apiClient)
+        }
+
+        return games
     }
 }

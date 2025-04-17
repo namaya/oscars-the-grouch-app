@@ -3,6 +3,8 @@ package com.namaya.oscarsthegrouch_app.ui.gamehome
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.namaya.oscarsthegrouch_app.databinding.PlayerCardBinding
 import com.namaya.oscarsthegrouch_app.model.Player
@@ -10,14 +12,7 @@ import com.namaya.oscarsthegrouch_app.model.User
 
 class PlayerListViewAdapter(
     private val onItemClick: (Player) -> Unit
-): RecyclerView.Adapter<PlayerListViewAdapter.ViewHolder>(){
-    // TODO: set this on the viewmodel
-    private val playersList = mutableListOf(
-        Player(User("1", "Player 1"), 0, 0),
-        Player(User("2", "Player 2"), 0, 0),
-        Player(User("3", "Player 3"), 0, 0)
-    )
-
+): ListAdapter<Player, PlayerListViewAdapter.ViewHolder>(ItemDiffCallback) {
     inner class ViewHolder(private val viewBinding: PlayerCardBinding): RecyclerView.ViewHolder(viewBinding.root) {
         fun bind(item: Player) {
             viewBinding.playerName.text = item.user.name
@@ -35,12 +30,17 @@ class PlayerListViewAdapter(
         return ViewHolder(viewBinding)
     }
 
-    override fun getItemCount(): Int {
-        return playersList.size
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(currentList[position])
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        require(position >= 0 && position < playersList.size) { "Invalid position in players list." }
-        holder.bind(playersList[position])
+    object ItemDiffCallback : DiffUtil.ItemCallback<Player>() {
+        override fun areItemsTheSame(oldItem: Player, newItem: Player): Boolean {
+            return oldItem.user.id == newItem.user.id
+        }
+        // TODO: make this more robust
+        override fun areContentsTheSame(oldItem: Player, newItem: Player): Boolean {
+            return oldItem.user.name == newItem.user.name
+        }
     }
 }

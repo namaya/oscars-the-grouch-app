@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.namaya.oscarsthegrouch_app.R
 import com.namaya.oscarsthegrouch_app.databinding.GamesListScreenBinding
 import com.namaya.oscarsthegrouch_app.ui.UiState
+import com.namaya.oscarsthegrouch_app.ui.viewmodels.GamesViewModel
+import com.namaya.oscarsthegrouch_app.ui.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,7 +23,8 @@ class GamesListFragment: Fragment() {
     private var _binding: GamesListScreenBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: GamesListViewModel by activityViewModels()
+    private val userViewModel: UserViewModel by activityViewModels()
+    private val gamesViewModel: GamesViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = GamesListScreenBinding.inflate(inflater, container, false)
@@ -62,10 +65,19 @@ class GamesListFragment: Fragment() {
             // Show the PopupMenu
             addGameMenu.show()
         }
+
+        userViewModel.user.observe(viewLifecycleOwner) { uiState ->
+            when (uiState) {
+                is UiState.Success -> {
+                    gamesViewModel.fetchGames(uiState.value.id)
+                }
+                else -> {}
+            }
+        }
     }
 
     private fun setupGameListView(ctx : Context) {
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+        gamesViewModel.gamesList.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {
                 is UiState.Loading -> {
                     binding.loadingView.visibility = View.VISIBLE
@@ -78,6 +90,7 @@ class GamesListFragment: Fragment() {
                     val layoutManager = LinearLayoutManager(ctx)
 
                     val adapter = GamesListViewAdapter {
+                        gamesViewModel.selectedGame.value = UiState.Success(it)
                         val navController = findNavController()
                         val action = GamesListFragmentDirections.toGameHomeScreen(it.id)
                         navController.navigate(action)
@@ -86,8 +99,11 @@ class GamesListFragment: Fragment() {
                     binding.gamesListView.layoutManager = layoutManager
                     binding.gamesListView.adapter = adapter
 
-                    viewModel.gamesList.observe(viewLifecycleOwner) { gamesList ->
-                        adapter.submitList(gamesList)
+                    gamesViewModel.gamesList.observe(viewLifecycleOwner) { gamesList ->
+                        when (gamesList) {
+                            is UiState.Success -> adapter.submitList(gamesList.value)
+                            else -> {}
+                        }
                     }
                 }
                 is UiState.Error -> {

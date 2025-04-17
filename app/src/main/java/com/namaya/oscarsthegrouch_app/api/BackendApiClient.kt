@@ -48,8 +48,8 @@ class NetworkModule {
 }
 
 interface BackendApiClient {
-    data class CreateUserRequest(val name: String)
-    data class CreateUserResponse(val id : String, val name: String)
+    data class CreateUserRequest(val name: String, val avatarUri: String)
+    data class CreateUserResponse(val userId: String)
     @POST("api/users")
     suspend fun createUser(
         @Body request: CreateUserRequest
@@ -65,11 +65,21 @@ interface BackendApiClient {
     @GET("api/users/avatars")
     suspend fun listAvatars(): ListAvatarsResponse
 
-    @GET("static/avatars/{avatar}")
-    @Streaming
-    suspend fun getAvatar(@Path("avatar") avatar: String): Response<ResponseBody>
-
     data class ListGamesResponse(val games: List<Game>)
     @GET("api/games")
     suspend fun listGames(@Header("Authorization") token: String): ListGamesResponse
+
+    data class ListPlayersResponse(val players: List<PlayerResponse>)
+    data class PlayerResponse(
+        val id: String,
+        val username: String,
+        val avatarUri: String,
+        val score: Int,
+        val state: String
+    )
+    @GET("api/games/{id}/players")
+    suspend fun getPlayers(
+        @Header("Authorization") userId: String,
+        @Path("id") gameId: String
+    ): ListPlayersResponse
 }

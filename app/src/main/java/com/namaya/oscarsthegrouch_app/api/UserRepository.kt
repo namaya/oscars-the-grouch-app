@@ -1,7 +1,5 @@
 package com.namaya.oscarsthegrouch_app.api
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -17,9 +15,9 @@ class UserRepository @Inject constructor(
         private val USER_ID_KEY = stringPreferencesKey("user_id")
     }
 
-    suspend fun createUser(name: String): User {
-        val resBody = apiClient.createUser(BackendApiClient.CreateUserRequest(name))
-        return User(resBody.id, name)
+    suspend fun createUser(name: String, avatarUri: String): User {
+        val resBody = apiClient.createUser(BackendApiClient.CreateUserRequest(name, avatarUri))
+        return User(resBody.userId, name, avatarUri)
     }
 
     suspend fun listAvatars(): List<String> {
@@ -30,7 +28,7 @@ class UserRepository @Inject constructor(
     suspend fun getUser(): User? {
         val prefs = dataStore.data.first()
         val userId = prefs[USER_ID_KEY] ?: return null
-        val resp = apiClient.getUser(userId)
-        return User(resp.userId, resp.name)
+        val resBody = apiClient.getUser(userId)
+        return User(resBody.userId, resBody.name, resBody.avatarUri)
     }
 }

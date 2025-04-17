@@ -50,16 +50,16 @@ class FillBallotFragment: Fragment() {
                     )
                     // TODO: isAnswered could be true
                     val items =
-                        List(uiState.data.size) { index -> CategoryIndexItem(index, false) }
+                        List(uiState.value.size) { index -> CategoryIndexItem(index, false) }
 
                     binding.statusIndicator.adapter = adapter
-                    binding.viewPager.adapter = CategoryFragmentAdapter(this, uiState.data)
+                    binding.viewPager.adapter = CategoryFragmentAdapter(this, uiState.value)
 
                     adapter.submitList(items)
 
                     viewModel.categoryGuesses.observe(viewLifecycleOwner) { categoryGuesses ->
                         val newItems = List(adapter.currentList.size) { index ->
-                            val isAnswered = categoryGuesses[uiState.data[index].id] != null
+                            val isAnswered = categoryGuesses[uiState.value[index].id] != null
                             CategoryIndexItem(index, isAnswered)
                         }
                         adapter.submitList(newItems)
