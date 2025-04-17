@@ -55,6 +55,12 @@ interface BackendApiClient {
         @Body request: CreateUserRequest
     ): CreateUserResponse
 
+    data class GetUserResponse(val userId : String, val name: String, val avatarUri: String)
+    @GET("api/users/{id}")
+    suspend fun getUser(
+        @Path("id") id: String
+    ): GetUserResponse
+
     data class ListAvatarsResponse(val avatars: List<String>)
     @GET("api/users/avatars")
     suspend fun listAvatars(): ListAvatarsResponse

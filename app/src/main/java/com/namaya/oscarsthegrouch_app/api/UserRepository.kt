@@ -27,19 +27,10 @@ class UserRepository @Inject constructor(
         return resp.avatars
     }
 
-    suspend fun getAvatar(avatar: String): Bitmap? {
-        val response = apiClient.getAvatar(avatar)
-
-        return if (response.isSuccessful) {
-            val body = response.body()?.byteStream()
-            BitmapFactory.decodeStream(body)
-        } else {
-            null
-        }
-    }
-
-    suspend fun isLoggedIn(): Boolean {
+    suspend fun getUser(): User? {
         val prefs = dataStore.data.first()
-        return prefs[USER_ID_KEY] != null
+        val userId = prefs[USER_ID_KEY] ?: return null
+        val resp = apiClient.getUser(userId)
+        return User(resp.userId, resp.name)
     }
 }

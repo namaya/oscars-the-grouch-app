@@ -1,6 +1,7 @@
 package com.namaya.oscarsthegrouch_app
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -11,15 +12,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.namaya.oscarsthegrouch_app.databinding.ActivityMainBinding
+import com.namaya.oscarsthegrouch_app.ui.UiState
 import com.namaya.oscarsthegrouch_app.ui.login.LoginFragmentDirections
-import com.namaya.oscarsthegrouch_app.ui.viewmodels.AuthViewModel
+import com.namaya.oscarsthegrouch_app.ui.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val viewModel: AuthViewModel by viewModels()
+    private val viewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,18 +42,22 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
                 val navController = navHostFragment.navController
 
-                viewModel.isLoggedIn.collect { loggedIn ->
-                    when (loggedIn) {
-                        true -> {
+                viewModel.user.observe(this@MainActivity) { result ->
+                    when (result) {
+                        is UiState.Loading -> {}
+                        is UiState.Success -> {
                             val action = LoginFragmentDirections.toGamesListScreen()
                             navController.navigate(action)
                         }
-
-                        false -> {}
+                        is UiState.Error -> {
+                            Toast.makeText(this@MainActivity, result.message, Toast.LENGTH_LONG).show()
+                        }
                         null -> {}
                     }
                 }
             }
         }
+
+        viewModel.fetchUser()
     }
 }

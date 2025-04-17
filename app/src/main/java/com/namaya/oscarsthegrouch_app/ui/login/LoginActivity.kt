@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.namaya.oscarsthegrouch_app.ui.viewmodels.AuthViewModel
+import com.namaya.oscarsthegrouch_app.ui.viewmodels.UserViewModel
 import com.namaya.oscarsthegrouch_app.databinding.LoginBinding
 
 class LoginFragment: Fragment() {
     private var _binding: LoginBinding? = null
     private val binding get() = _binding!!
 
-    private val userViewModel: AuthViewModel by activityViewModels()
+    private val userViewModel: UserViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = LoginBinding.inflate(inflater, container, false)
