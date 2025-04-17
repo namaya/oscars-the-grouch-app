@@ -1,29 +1,25 @@
 package com.namaya.oscarsthegrouch_app
 
-import android.content.Context
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.namaya.oscarsthegrouch_app.api.UserRepository
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.NavHostFragment
 import com.namaya.oscarsthegrouch_app.databinding.ActivityMainBinding
+import com.namaya.oscarsthegrouch_app.ui.login.LoginFragmentDirections
+import com.namaya.oscarsthegrouch_app.ui.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 
-//val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-//    @Inject
-//    lateinit var userRepo: UserRepository
+    private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +32,26 @@ class MainActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
+                val navController = navHostFragment.navController
+
+                viewModel.isLoggedIn.collect { loggedIn ->
+                    when (loggedIn) {
+                        true -> {
+                            val action = LoginFragmentDirections.toGamesListScreen()
+                            navController.navigate(action)
+                        }
+
+                        false -> {}
+                        null -> {}
+                    }
+                }
+            }
         }
     }
 }

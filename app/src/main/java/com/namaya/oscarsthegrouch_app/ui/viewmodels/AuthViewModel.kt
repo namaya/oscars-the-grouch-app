@@ -1,4 +1,4 @@
-package com.namaya.oscarsthegrouch_app
+package com.namaya.oscarsthegrouch_app.ui.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

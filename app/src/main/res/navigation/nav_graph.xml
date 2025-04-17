@@ -2,8 +2,19 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/gamesListScreen"
+    app:startDestination="@id/loginScreen"
     >
+
+    <fragment
+        android:id="@+id/loginScreen"
+        android:name="com.namaya.oscarsthegrouch_app.ui.login.LoginFragment"
+        android:label="Login"
+        >
+        <action
+            android:id="@+id/toGamesListScreen"
+            app:destination="@id/gamesListScreen"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/gamesListScreen"
