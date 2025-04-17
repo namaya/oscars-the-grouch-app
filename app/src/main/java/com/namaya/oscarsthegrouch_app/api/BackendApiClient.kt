@@ -69,6 +69,14 @@ interface BackendApiClient {
     @GET("api/games")
     suspend fun listGames(@Header("Authorization") token: String): ListGamesResponse
 
+    data class CreateGameRequest(val name: String)
+    data class CreateGameResponse(val id: String, val name: String, val state: String)
+    @POST("api/games")
+    suspend fun createGame(
+        @Header("Authorization") userId: String,
+        @Body request: CreateGameRequest
+    ): CreateGameResponse
+
     data class ListPlayersResponse(val players: List<PlayerResponse>)
     data class PlayerResponse(
         val id: String,

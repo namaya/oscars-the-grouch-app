@@ -36,9 +36,11 @@ class GamesListFragment: Fragment() {
 
         setupGameListView(ctx)
 
-        binding.addGameButton.setOnClickListener { gameButtonView ->
-            // TODO: reuse popup menu (don't create new object everytime)
-            val addGameMenu = PopupMenu(ctx, gameButtonView)
+        // TODO: reuse popup menu (don't create new object everytime)
+
+
+        binding.addGameButton.setOnClickListener {
+            val addGameMenu = PopupMenu(ctx, it)
 
             // Inflate the menu resource
             addGameMenu.menuInflater.inflate(R.menu.add_game_menu, addGameMenu.menu)
@@ -61,7 +63,6 @@ class GamesListFragment: Fragment() {
                     else -> false
                 }
             }
-
             // Show the PopupMenu
             addGameMenu.show()
         }
@@ -77,6 +78,18 @@ class GamesListFragment: Fragment() {
     }
 
     private fun setupGameListView(ctx : Context) {
+        val layoutManager = LinearLayoutManager(ctx)
+
+        val adapter = GamesListViewAdapter {
+            gamesViewModel.selectedGame.value = UiState.Success(it)
+            val navController = findNavController()
+            val action = GamesListFragmentDirections.toGameHomeScreen(it.id)
+            navController.navigate(action)
+        }
+
+        binding.gamesListView.layoutManager = layoutManager
+        binding.gamesListView.adapter = adapter
+
         gamesViewModel.gamesList.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {
                 is UiState.Loading -> {
@@ -87,24 +100,7 @@ class GamesListFragment: Fragment() {
                     binding.loadingView.visibility = View.GONE
                     binding.gamesListView.visibility = View.VISIBLE
 
-                    val layoutManager = LinearLayoutManager(ctx)
-
-                    val adapter = GamesListViewAdapter {
-                        gamesViewModel.selectedGame.value = UiState.Success(it)
-                        val navController = findNavController()
-                        val action = GamesListFragmentDirections.toGameHomeScreen(it.id)
-                        navController.navigate(action)
-                    }
-
-                    binding.gamesListView.layoutManager = layoutManager
-                    binding.gamesListView.adapter = adapter
-
-                    gamesViewModel.gamesList.observe(viewLifecycleOwner) { gamesList ->
-                        when (gamesList) {
-                            is UiState.Success -> adapter.submitList(gamesList.value)
-                            else -> {}
-                        }
-                    }
+                    adapter.submitList(uiState.value)
                 }
                 is UiState.Error -> {
                     Toast.makeText(ctx, uiState.message, Toast.LENGTH_SHORT).show()

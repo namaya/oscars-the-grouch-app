@@ -37,6 +37,13 @@ class GamesViewModel @Inject constructor(
         }
     }
 
+    fun createGame(userId: String, name: String) {
+        viewModelScope.launch {
+            val game = gameRepo.createGame(userId, name)
+            selectedGame.value = UiState.Success(game)
+        }
+    }
+
     fun fetchPlayers(game: Game) {
         viewModelScope.launch {
             _players.value = try {

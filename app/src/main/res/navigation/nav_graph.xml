@@ -36,7 +36,7 @@
 
     <fragment
         android:id="@+id/gameCreateScreen"
-        android:name="com.namaya.oscarsthegrouch_app.ui.CreateGameFragment"
+        android:name="com.namaya.oscarsthegrouch_app.ui.gameslist.CreateGameFragment"
         android:label="CreateGame"
         >
 

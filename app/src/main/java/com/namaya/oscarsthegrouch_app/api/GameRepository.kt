@@ -16,4 +16,9 @@ class GameRepository @Inject constructor(private val apiClient: BackendApiClient
 
         return games
     }
+
+    suspend fun createGame(userId: String, name: String): Game {
+        val resBody = apiClient.createGame(userId, BackendApiClient.CreateGameRequest(name))
+        return Game(resBody.id, resBody.name, resBody.state, userId, emptyList(), apiClient)
+    }
 }
