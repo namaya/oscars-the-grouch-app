@@ -7,19 +7,22 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.navArgs
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.namaya.oscarsthegrouch_app.databinding.FragmentFillBallotBinding
 import com.namaya.oscarsthegrouch_app.ui.UiState
+import com.namaya.oscarsthegrouch_app.ui.viewmodels.BallotViewModel
+import com.namaya.oscarsthegrouch_app.ui.viewmodels.GamesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FillBallotFragment: Fragment() {
     private var _binding: FragmentFillBallotBinding? = null
     private val binding get() = _binding!! // only valid between onCreateView and onDestroyView
 
-    private val viewModel: BallotViewModel by activityViewModels()
-    private val naviArgs: FillBallotFragmentArgs by navArgs()
+    private val gamesViewModel: GamesViewModel by activityViewModels()
+    private val ballotViewModel: BallotViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentFillBallotBinding.inflate(inflater, container, false)
@@ -29,10 +32,18 @@ class FillBallotFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.ballotsPlayerName.text = naviArgs.playerName
+        gamesViewModel.selectedPlayer.observe(viewLifecycleOwner) {
+            binding.ballotsPlayerName.text = it.user.name
+        }
 
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            when (uiState) {
+            val adapter = CategoryIndexAdapter(
+            onItemClick = { index ->
+//                            binding.viewPager.setCurrentItem(index, true)
+            }
+        )
+
+        ballotViewModel.categoryBank.observe(viewLifecycleOwner) {
+            when (it) {
                 is UiState.Loading -> {
                     binding.loadingView.visibility = View.VISIBLE
                     binding.viewPager.visibility = View.GONE
@@ -43,39 +54,34 @@ class FillBallotFragment: Fragment() {
 
                     binding.statusIndicator.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-                    val adapter = CategoryIndexAdapter(
-                        onItemClick = { index ->
-//                            binding.viewPager.setCurrentItem(index, true)
-                        }
-                    )
                     // TODO: isAnswered could be true
                     val items =
-                        List(uiState.value.size) { index -> CategoryIndexItem(index, false) }
+                        List(it.value.size) { index -> CategoryIndexItem(index, false) }
 
                     binding.statusIndicator.adapter = adapter
-                    binding.viewPager.adapter = CategoryFragmentAdapter(this, uiState.value)
+                    binding.viewPager.adapter = CategoryFragmentAdapter(this, it.value)
 
                     adapter.submitList(items)
-
-                    viewModel.categoryGuesses.observe(viewLifecycleOwner) { categoryGuesses ->
-                        val newItems = List(adapter.currentList.size) { index ->
-                            val isAnswered = categoryGuesses[uiState.value[index].id] != null
-                            CategoryIndexItem(index, isAnswered)
-                        }
-                        adapter.submitList(newItems)
-                    }
 
                     binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
                         override fun onPageSelected(position: Int) {
                             super.onPageSelected(position)
-                            viewModel.moveToCategory(position)
+                            ballotViewModel.moveToCategory(position)
                         }
                     })
                 }
                 is UiState.Error -> {
-                    Toast.makeText(requireContext(), uiState.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+
+        ballotViewModel.categoryGuesses.observe(viewLifecycleOwner) {
+//            val newItems = List(adapter.currentList.size) { index ->
+//                val isAnswered = it[ca.value[index].id] != null
+//                CategoryIndexItem(index, isAnswered)
+//            }
+//            adapter.submitList(newItems)
         }
     }
 

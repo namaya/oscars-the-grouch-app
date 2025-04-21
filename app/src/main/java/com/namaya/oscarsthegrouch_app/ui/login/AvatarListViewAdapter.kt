@@ -1,5 +1,6 @@
 package com.namaya.oscarsthegrouch_app.ui.login
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,11 +8,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.namaya.oscarsthegrouch_app.databinding.UserAvatarBinding
-import kotlin.coroutines.coroutineContext
 
 class AvatarListViewAdapter(
     private val onItemClick: (String) -> Unit
 ): ListAdapter<String, AvatarListViewAdapter.ViewHolder>(AvatarDiffCallback) {
+
+    private var selectedPos = RecyclerView.NO_POSITION
+
     inner class ViewHolder(private val viewBinding: UserAvatarBinding): RecyclerView.ViewHolder(viewBinding.root) {
         fun bind(item: String) {
             val imageView = viewBinding.avatarImageView
@@ -23,7 +26,20 @@ class AvatarListViewAdapter(
                 .circleCrop() // optional: for rounded avatars
                 .into(imageView)
 
+            if (selectedPos != adapterPosition) {
+                viewBinding.root.setBackgroundColor(Color.TRANSPARENT)
+            }
+
             viewBinding.root.setOnClickListener {
+                val prevPos = selectedPos
+                selectedPos = adapterPosition
+
+                if (prevPos != RecyclerView.NO_POSITION) {
+                    notifyItemChanged(prevPos)
+                }
+
+                viewBinding.root.setBackgroundColor(Color.BLUE)
+
                 onItemClick(item)
             }
         }

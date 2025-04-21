@@ -45,7 +45,7 @@ class CreateGameFragment: Fragment() {
             when (it) {
                 is UiState.Success -> {
                     val navController = findNavController()
-                    val action = CreateGameFragmentDirections.toGameHomeScreen(it.value.id)
+                    val action = CreateGameFragmentDirections.toGameHomeScreen()
                     navController.navigate(action)
                 }
                 else -> {}

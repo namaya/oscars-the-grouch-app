@@ -22,9 +22,6 @@ class UserViewModel @Inject constructor(
     private val _user = MutableLiveData<UiState<User>>(UiState.Loading)
     val user: LiveData<UiState<User>> = _user
 
-    private val _avatars = MutableLiveData<List<String>>(emptyList())
-    val avatars: LiveData<List<String>> = _avatars
-
     fun fetchUser() {
         _user.value = UiState.Loading
         viewModelScope.launch {
@@ -38,9 +35,38 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun fetchAvatars() {
+    fun createUser(name: String, avatarUri: String) {
+        _user.value = UiState.Loading
         viewModelScope.launch {
-            _avatars.value = userRepository.listAvatars()
+            _user.value = try {
+                val user = userRepository.createUser(name, avatarUri)
+                UiState.Success(user)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                UiState.Error("Error creating user")
+            }
         }
+    }
+
+    private val _avatars = MutableLiveData<UiState<List<String>>>(UiState.Loading)
+    val avatars: LiveData<UiState<List<String>>> = _avatars
+
+    val selectedAvatarUri: MutableLiveData<String> = MutableLiveData<String>()
+
+    fun fetchAvatars() {
+        _avatars.value = UiState.Loading
+        viewModelScope.launch {
+            _avatars.value = try {
+                val avatars = userRepository.listAvatars()
+                UiState.Success(avatars)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                UiState.Error("Error loading avatars")
+            }
+        }
+    }
+
+    fun setAvatar(avatarUri: String) {
+        selectedAvatarUri.value = avatarUri
     }
 }

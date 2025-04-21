@@ -11,6 +11,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.namaya.oscarsthegrouch_app.R
 import com.namaya.oscarsthegrouch_app.databinding.BallotCategoryBinding
 import com.namaya.oscarsthegrouch_app.model.Category
+import com.namaya.oscarsthegrouch_app.ui.viewmodels.BallotViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 class CategoryFragmentAdapter(fragment: Fragment, private val categories: List<Category>): FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int {
@@ -22,9 +24,12 @@ class CategoryFragmentAdapter(fragment: Fragment, private val categories: List<C
     }
 }
 
+@AndroidEntryPoint
 class CategoryFragment(private val category: Category): Fragment() {
     private var _binding: BallotCategoryBinding? = null
     private val binding get() = _binding!! // only valid between onCreateView and onDestroyView
+
+    val ballotViewModel: BallotViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = BallotCategoryBinding.inflate(inflater, container, false)
@@ -41,23 +46,21 @@ class CategoryFragment(private val category: Category): Fragment() {
 //        binding.optionsGroup.layoutManager = LinearLayoutManager(requireContext())
 
         binding.optionsGroup.setOnCheckedChangeListener { _, checkedId ->
-            val viewModel: BallotViewModel by activityViewModels()
-
             when (checkedId) {
                 R.id.option1 -> {
-                    viewModel.answerCurrentCategory(0)
+                    ballotViewModel.answerCurrentCategory(0)
                     binding.option1.setBackgroundColor(Color.YELLOW)
                 }
                 R.id.option2 -> {
-                    viewModel.answerCurrentCategory(0)
+                    ballotViewModel.answerCurrentCategory(0)
                     binding.option2.setBackgroundColor(Color.YELLOW)
                 }
                 R.id.option3 -> {
-                    viewModel.answerCurrentCategory(0)
+                    ballotViewModel.answerCurrentCategory(0)
                     binding.option3.setBackgroundColor(Color.YELLOW)
                 }
                 R.id.option4 -> {
-                    viewModel.answerCurrentCategory(0)
+                    ballotViewModel.answerCurrentCategory(0)
                     binding.option4.setBackgroundColor(Color.YELLOW)
                 }
             }

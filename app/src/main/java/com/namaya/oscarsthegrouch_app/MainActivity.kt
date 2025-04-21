@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val viewModel: UserViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
                 val navController = navHostFragment.navController
 
-                viewModel.user.observe(this@MainActivity) { result ->
+                userViewModel.user.observe(this@MainActivity) { result ->
                     when (result) {
                         is UiState.Loading -> {}
                         is UiState.Success -> {
@@ -58,6 +58,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.fetchUser()
+        userViewModel.fetchUser()
     }
 }

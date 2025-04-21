@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.namaya.oscarsthegrouch_app.databinding.GameScreenBinding
 import com.namaya.oscarsthegrouch_app.ui.UiState
+import com.namaya.oscarsthegrouch_app.ui.viewmodels.BallotViewModel
 import com.namaya.oscarsthegrouch_app.ui.viewmodels.GamesViewModel
 
 class GameHomeFragment: Fragment() {
@@ -17,6 +18,7 @@ class GameHomeFragment: Fragment() {
     private val binding get() = _binding!!
 
     private val gamesViewModel: GamesViewModel by activityViewModels()
+    private val ballotViewModel: BallotViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = GameScreenBinding.inflate(inflater, container, false)
@@ -27,9 +29,7 @@ class GameHomeFragment: Fragment() {
         val ctx = requireContext()
         val layoutManager = LinearLayoutManager(ctx)
         val adapter = PlayerListViewAdapter {
-            val navController = findNavController()
-            val action = GameHomeFragmentDirections.toBallotScreen(it.user.name)
-            navController.navigate(action)
+            gamesViewModel.selectedPlayer.value = it
         }
 
         binding.playerListView.layoutManager = layoutManager
@@ -40,6 +40,7 @@ class GameHomeFragment: Fragment() {
                 is UiState.Success -> {
                     binding.gameName.text = it.value.name
                     gamesViewModel.fetchPlayers(it.value)
+                    ballotViewModel.fetchCategories(it.value)
                 }
 
                 else -> {}
@@ -56,11 +57,17 @@ class GameHomeFragment: Fragment() {
             }
         }
 
+        gamesViewModel.selectedPlayer.observe(viewLifecycleOwner) {
+            val navController = findNavController()
+            val action = GameHomeFragmentDirections.toBallotScreen()
+            navController.navigate(action)
+        }
+
         binding.startGameButton.setOnClickListener {
             // TODO: check if game is ready to start
-            val navController = findNavController()
-            val action = GameHomeFragmentDirections.toBallotScreen("Player 1")
-            navController.navigate(action)
+//            val navController = findNavController()
+//            val action = GameHomeFragmentDirections.toBallotScreen()
+//            navController.navigate(action)
         }
 
 //        binding.addGameButton.setOnClickListener { gameButtonView ->

@@ -83,7 +83,7 @@ class GamesListFragment: Fragment() {
         val adapter = GamesListViewAdapter {
             gamesViewModel.selectedGame.value = UiState.Success(it)
             val navController = findNavController()
-            val action = GamesListFragmentDirections.toGameHomeScreen(it.id)
+            val action = GamesListFragmentDirections.toGameHomeScreen()
             navController.navigate(action)
         }
 

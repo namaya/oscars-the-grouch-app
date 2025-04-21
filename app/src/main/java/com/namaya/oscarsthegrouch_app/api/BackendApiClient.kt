@@ -1,5 +1,6 @@
 package com.namaya.oscarsthegrouch_app.api
 
+import com.namaya.oscarsthegrouch_app.model.Category
 import com.namaya.oscarsthegrouch_app.model.Game
 import dagger.Module
 import dagger.Provides
@@ -90,4 +91,8 @@ interface BackendApiClient {
         @Header("Authorization") userId: String,
         @Path("id") gameId: String
     ): ListPlayersResponse
+
+    data class ListNominationsResponse(val categories: List<Category>)
+    @GET("api/games/{id}/nominations")
+    suspend fun listNominations(@Header("Authorization") userId: String, @Path("id") gameId: String): ListNominationsResponse
 }

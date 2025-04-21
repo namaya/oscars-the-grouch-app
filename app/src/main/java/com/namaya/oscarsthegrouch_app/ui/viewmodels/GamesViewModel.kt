@@ -24,6 +24,8 @@ class GamesViewModel @Inject constructor(
     private val _players: MutableLiveData<UiState<List<Player>>> = MutableLiveData(UiState.Loading)
     val players: LiveData<UiState<List<Player>>> = _players
 
+    val selectedPlayer: MutableLiveData<Player> = MutableLiveData<Player>()
+
     // TODO: set up loading screen via ui state
     fun fetchGames(userId: String) {
         _gamesList.value = UiState.Loading
