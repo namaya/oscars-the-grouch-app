@@ -36,12 +36,6 @@ class FillBallotFragment: Fragment() {
             binding.ballotsPlayerName.text = it.user.name
         }
 
-            val adapter = CategoryIndexAdapter(
-            onItemClick = { index ->
-//                            binding.viewPager.setCurrentItem(index, true)
-            }
-        )
-
         ballotViewModel.categoryBank.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Loading -> {
@@ -57,6 +51,12 @@ class FillBallotFragment: Fragment() {
                     // TODO: isAnswered could be true
                     val items =
                         List(it.value.size) { index -> CategoryIndexItem(index, false) }
+
+                    val adapter = CategoryIndexAdapter(
+                        onItemClick = { index ->
+//                            binding.viewPager.setCurrentItem(index, true)
+                        }
+                    )
 
                     binding.statusIndicator.adapter = adapter
                     binding.viewPager.adapter = CategoryFragmentAdapter(this, it.value)
