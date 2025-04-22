@@ -56,6 +56,12 @@
             app:destination="@id/ballotScreen"
             >
         </action>
+
+        <action
+            android:id="@+id/toAddPlayerScreen"
+            app:destination="@id/addPlayerScreen"
+            >
+        </action>
     </fragment>
 
     <fragment
@@ -63,6 +69,17 @@
         android:name="com.namaya.oscarsthegrouch_app.ui.ballot.FillBallotFragment"
         android:label="Ballot"
         >
+    </fragment>
+
+    <fragment
+        android:id="@+id/addPlayerScreen"
+        android:name="com.namaya.oscarsthegrouch_app.ui.gamehome.AddPlayerFragment"
+        android:label="AddPlayer"
+        >
+        <action
+            android:id="@+id/toGameHomeScreen"
+            app:destination="@id/gameHomeScreen"
+            />
     </fragment>
 
 </navigation>

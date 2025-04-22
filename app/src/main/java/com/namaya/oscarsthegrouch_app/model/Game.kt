@@ -14,10 +14,16 @@ data class Game(
         val resBody = apiClient.getPlayers(ownerId, id)
 
         val players = resBody.players.map {
-            Player(User(it.id, it.username, it.avatarUri), it.score, it.state)
+            Player(it.id, User(it.userId, it.username, it.avatarUri), it.score, it.state)
         }
 
         return players
+    }
+
+    suspend fun addPlayer(name: String, avatarUri: String): Player {
+        val resBody = apiClient.addPlayer(ownerId, id, BackendApiClient.AddPlayerRequest(name, avatarUri))
+        val player = Player(resBody.id, User(resBody.userId, name, avatarUri), 0, "Waiting")
+        return player
     }
 
     fun withPlayers(players: List<Player>): Game {

@@ -70,6 +70,12 @@ class GameHomeFragment: Fragment() {
 //            navController.navigate(action)
         }
 
+        binding.addPlayerB.setOnClickListener {
+            val navController = findNavController()
+            val action = GameHomeFragmentDirections.toAddPlayerScreen()
+            navController.navigate(action)
+        }
+
 //        binding.addGameButton.setOnClickListener { gameButtonView ->
 //            val addGameMenu = PopupMenu(ctx, gameButtonView)
 //

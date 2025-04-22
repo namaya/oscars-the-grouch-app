@@ -81,6 +81,7 @@ interface BackendApiClient {
     data class ListPlayersResponse(val players: List<PlayerResponse>)
     data class PlayerResponse(
         val id: String,
+        val userId: String,
         val username: String,
         val avatarUri: String,
         val score: Int,
@@ -91,6 +92,14 @@ interface BackendApiClient {
         @Header("Authorization") userId: String,
         @Path("id") gameId: String
     ): ListPlayersResponse
+
+    data class AddPlayerRequest(val name: String, val avatarUri: String)
+    @POST("api/games/{id}/players")
+    suspend fun addPlayer(
+        @Header("Authorization") userId: String,
+        @Path("id") gameId: String,
+        @Body request: AddPlayerRequest
+    ): PlayerResponse
 
     data class ListNominationsResponse(val categories: List<Category>)
     @GET("api/games/{id}/nominations")

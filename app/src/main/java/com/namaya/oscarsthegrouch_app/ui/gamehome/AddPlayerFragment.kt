@@ -1,0 +1,77 @@
+package com.namaya.oscarsthegrouch_app.ui.gamehome
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import com.namaya.oscarsthegrouch_app.databinding.AddPlayerScreenBinding
+import com.namaya.oscarsthegrouch_app.ui.login.AvatarListViewAdapter
+import com.namaya.oscarsthegrouch_app.ui.viewmodels.GamesViewModel
+import com.namaya.oscarsthegrouch_app.ui.viewmodels.UserViewModel
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.namaya.oscarsthegrouch_app.ui.UiState
+
+class AddPlayerFragment: Fragment() {
+    private var _binding: AddPlayerScreenBinding? = null
+    private val binding get() = _binding!!
+
+    private val userViewModel: UserViewModel by activityViewModels()
+    private val gamesViewModel: GamesViewModel by activityViewModels()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = AddPlayerScreenBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        userViewModel.fetchAvatars()
+
+        val adapter = AvatarListViewAdapter {
+            userViewModel.setAvatar(it)
+        }
+
+        userViewModel.avatars.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Success -> {
+                    binding.avatarList.layoutManager = LinearLayoutManager(requireContext())
+                    binding.avatarList.adapter = adapter
+
+                    adapter.submitList(it.value)
+                }
+                else -> Toast.makeText(requireContext(), "Error loading avatars", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.loginButton.setOnClickListener {
+            val name = binding.usernameInput.text.toString()
+            if (name.isBlank()) {
+                binding.usernameInput.error = "Name cannot be blank"
+                return@setOnClickListener
+            }
+
+            val avatarUri = userViewModel.selectedAvatarUri.value
+            if (avatarUri == null) {
+                Toast.makeText(requireContext(), "Please select an avatar", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            gamesViewModel.addPlayer(name, avatarUri)
+        }
+
+        gamesViewModel.addedPlayerState.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Success -> {
+                    Toast.makeText(requireContext(), "Player added", Toast.LENGTH_SHORT).show()
+                    val navController = findNavController()
+
+                    navController.popBackStack()
+                }
+                else -> Toast.makeText(requireContext(), "Error adding player", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+}

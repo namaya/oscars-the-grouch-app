@@ -50,6 +50,13 @@
             android:id="@+id/startGameButton"
             android:text="START GAME"
             />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/addPlayerB"
+            android:text="ADD PLAYER"
+            />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

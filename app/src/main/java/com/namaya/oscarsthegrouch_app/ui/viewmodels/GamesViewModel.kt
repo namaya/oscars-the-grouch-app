@@ -56,4 +56,24 @@ class GamesViewModel @Inject constructor(
             }
         }
     }
+
+    val addedPlayerState = MutableLiveData<UiState<Player>>()
+
+    fun addPlayer(name: String, avatarUri: String) {
+        viewModelScope.launch {
+            val game = when (val game = selectedGame.value) {
+                is UiState.Success -> game.value
+                else -> return@launch
+            }
+
+            val player = game.addPlayer(name, avatarUri)
+
+            _players.value =
+                when (val players = _players.value) {
+                    is UiState.Success -> UiState.Success(players.value + player)
+                    else -> UiState.Error("Error adding player")
+                }
+            addedPlayerState.value = UiState.Success(player)
+        }
+    }
 }
