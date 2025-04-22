@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.namaya.oscarsthegrouch_app.api.GameRepository
 import com.namaya.oscarsthegrouch_app.model.Category
 import com.namaya.oscarsthegrouch_app.model.Game
+import com.namaya.oscarsthegrouch_app.model.Nominee
 import kotlinx.coroutines.launch
 import com.namaya.oscarsthegrouch_app.ui.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,24 +33,22 @@ class BallotViewModel @Inject constructor(
     }
 
     private val _selectedCategoryIdx: MutableLiveData<Int> = MutableLiveData(0)
-    val selectedCategoryIdx: LiveData<Int> = _selectedCategoryIdx
+//    val selectedCategoryIdx: LiveData<Int> = _selectedCategoryIdx
 
-    private val _categoryGuesses: MutableLiveData<Map<String, Int>> = MutableLiveData(mapOf())
-    val categoryGuesses: LiveData<Map<String, Int>> = _categoryGuesses
+    private val _categoryGuesses: MutableLiveData<Map<String, Nominee>> = MutableLiveData(mapOf())
+    val categoryGuesses: LiveData<Map<String, Nominee>> = _categoryGuesses
 
     fun moveToCategory(index: Int) {
         _selectedCategoryIdx.value = index
     }
 
-    fun answerCurrentCategory(guess: Int) {
+    fun answerCategory(guess: Nominee) {
         val currentCategory = when (val state = _categoryBank.value) {
             is UiState.Success -> {
                 state.value[_selectedCategoryIdx.value!!]
             }
             else -> throw Exception("Invalid state")
         }
-
-        require(guess >= 0 && guess < currentCategory.nominees.size)
 
         val newCategoryGuesses = _categoryGuesses.value!!.toMutableMap()
         newCategoryGuesses[currentCategory.id] = guess

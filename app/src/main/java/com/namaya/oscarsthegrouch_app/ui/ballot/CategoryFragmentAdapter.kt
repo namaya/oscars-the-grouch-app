@@ -43,38 +43,12 @@ class CategoryFragment(private val category: Category): Fragment() {
         binding.questionText.text = category.name
 
         val adapter = NomineeAdapter {
-
+            ballotViewModel.answerCategory(it)
         }
+
         binding.choicesRV.adapter = adapter
         binding.choicesRV.layoutManager = LinearLayoutManager(requireContext())
 
         adapter.submitList(category.nominees)
-
-//        ballotViewModel.selectedCategoryIdx.observe(viewLifecycleOwner) {
-//            if (it == category.id) {
-//                adapter.submitList(category.nominees)
-//            }
-//        }
-
-//        binding.optionsGroup.setOnCheckedChangeListener { _, checkedId ->
-//            when (checkedId) {
-//                R.id.option1 -> {
-//                    ballotViewModel.answerCurrentCategory(0)
-//                    binding.option1.setBackgroundColor(Color.YELLOW)
-//                }
-//                R.id.option2 -> {
-//                    ballotViewModel.answerCurrentCategory(0)
-//                    binding.option2.setBackgroundColor(Color.YELLOW)
-//                }
-//                R.id.option3 -> {
-//                    ballotViewModel.answerCurrentCategory(0)
-//                    binding.option3.setBackgroundColor(Color.YELLOW)
-//                }
-//                R.id.option4 -> {
-//                    ballotViewModel.answerCurrentCategory(0)
-//                    binding.option4.setBackgroundColor(Color.YELLOW)
-//                }
-//            }
-//        }
     }
 }

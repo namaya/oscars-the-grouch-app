@@ -17,17 +17,24 @@ class NomineeAdapter(
     private val onItemClick: (Nominee) -> Unit
 ) : ListAdapter<Nominee, NomineeAdapter.NomineeViewHolder>(ItemDiffCallback)
 {
+    private var selectedPos = RecyclerView.NO_POSITION
+
     inner class NomineeViewHolder(private val vb: NomineeCardBinding): RecyclerView.ViewHolder(vb.root) {
         fun bind(item: Nominee) {
             vb.nomineeTV.text = item.work + " - " + item.contributor
 
-//            vb.root.setBackgroundResource(R.drawable.bg_nominee_card)
-            vb.root.elevation = 10f
-//            vb.root.radius = 10f
-            vb.root.clipToOutline = true
-
+            if (selectedPos != adapterPosition) {
+                vb.root.setBackgroundColor(Color.TRANSPARENT)
+            }
 
             vb.root.setOnClickListener {
+                val prevPos = selectedPos
+                selectedPos = adapterPosition
+
+                if (prevPos != RecyclerView.NO_POSITION) {
+                    notifyItemChanged(prevPos)
+                }
+
                 vb.root.setBackgroundColor(Color.YELLOW)
                 onItemClick(item)
             }

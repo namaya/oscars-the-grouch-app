@@ -36,6 +36,10 @@ class FillBallotFragment: Fragment() {
             binding.ballotsPlayerName.text = it.user.name
         }
 
+        val adapter = CategoryIndexAdapter {
+            binding.viewPager.currentItem = it
+        }
+
         ballotViewModel.categoryBank.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Loading -> {
@@ -51,12 +55,6 @@ class FillBallotFragment: Fragment() {
                     // TODO: isAnswered could be true
                     val items =
                         List(it.value.size) { index -> CategoryIndexItem(index, false) }
-
-                    val adapter = CategoryIndexAdapter(
-                        onItemClick = { index ->
-//                            binding.viewPager.setCurrentItem(index, true)
-                        }
-                    )
 
                     binding.statusIndicator.adapter = adapter
                     binding.viewPager.adapter = CategoryFragmentAdapter(this, it.value)
@@ -79,11 +77,17 @@ class FillBallotFragment: Fragment() {
         }
 
         ballotViewModel.categoryGuesses.observe(viewLifecycleOwner) {
-//            val newItems = List(adapter.currentList.size) { index ->
-//                val isAnswered = it[ca.value[index].id] != null
-//                CategoryIndexItem(index, isAnswered)
-//            }
-//            adapter.submitList(newItems)
+            val cb = when (val state = ballotViewModel.categoryBank.value) {
+                is UiState.Success -> state.value
+                else -> throw Exception("Invalid state")
+            }
+
+            val newItems = List(adapter.currentList.size) { index ->
+                val isAnswered = it[cb[index].id] != null
+                CategoryIndexItem(index, isAnswered)
+            }
+
+            adapter.submitList(newItems)
         }
     }
 

@@ -2,6 +2,7 @@ package com.namaya.oscarsthegrouch_app.api
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.namaya.oscarsthegrouch_app.model.User
 import kotlinx.coroutines.flow.first
@@ -17,6 +18,11 @@ class UserRepository @Inject constructor(
 
     suspend fun createUser(name: String, avatarUri: String): User {
         val resBody = apiClient.createUser(BackendApiClient.CreateUserRequest(name, avatarUri))
+
+        dataStore.edit {
+            it[USER_ID_KEY] = resBody.userId
+        }
+
         return User(resBody.userId, name, avatarUri)
     }
 
