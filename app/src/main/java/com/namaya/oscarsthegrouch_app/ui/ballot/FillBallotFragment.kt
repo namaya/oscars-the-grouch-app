@@ -62,6 +62,8 @@ class FillBallotFragment: Fragment() {
                     binding.viewPager.adapter = CategoryFragmentAdapter(this, it.value)
 
                     adapter.submitList(items)
+                    // TODO: save position in persistent store
+                    ballotViewModel.moveToCategory(0)
 
                     binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
                         override fun onPageSelected(position: Int) {

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.namaya.oscarsthegrouch_app.R
 import com.namaya.oscarsthegrouch_app.databinding.BallotCategoryBinding
@@ -41,29 +42,39 @@ class CategoryFragment(private val category: Category): Fragment() {
 
         binding.questionText.text = category.name
 
-//        val adapter = NomineeAdapter(category.nominees)
-//        binding.optionsGroup.adapter = adapter
-//        binding.optionsGroup.layoutManager = LinearLayoutManager(requireContext())
+        val adapter = NomineeAdapter {
 
-        binding.optionsGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.option1 -> {
-                    ballotViewModel.answerCurrentCategory(0)
-                    binding.option1.setBackgroundColor(Color.YELLOW)
-                }
-                R.id.option2 -> {
-                    ballotViewModel.answerCurrentCategory(0)
-                    binding.option2.setBackgroundColor(Color.YELLOW)
-                }
-                R.id.option3 -> {
-                    ballotViewModel.answerCurrentCategory(0)
-                    binding.option3.setBackgroundColor(Color.YELLOW)
-                }
-                R.id.option4 -> {
-                    ballotViewModel.answerCurrentCategory(0)
-                    binding.option4.setBackgroundColor(Color.YELLOW)
-                }
-            }
         }
+        binding.choicesRV.adapter = adapter
+        binding.choicesRV.layoutManager = LinearLayoutManager(requireContext())
+
+        adapter.submitList(category.nominees)
+
+//        ballotViewModel.selectedCategoryIdx.observe(viewLifecycleOwner) {
+//            if (it == category.id) {
+//                adapter.submitList(category.nominees)
+//            }
+//        }
+
+//        binding.optionsGroup.setOnCheckedChangeListener { _, checkedId ->
+//            when (checkedId) {
+//                R.id.option1 -> {
+//                    ballotViewModel.answerCurrentCategory(0)
+//                    binding.option1.setBackgroundColor(Color.YELLOW)
+//                }
+//                R.id.option2 -> {
+//                    ballotViewModel.answerCurrentCategory(0)
+//                    binding.option2.setBackgroundColor(Color.YELLOW)
+//                }
+//                R.id.option3 -> {
+//                    ballotViewModel.answerCurrentCategory(0)
+//                    binding.option3.setBackgroundColor(Color.YELLOW)
+//                }
+//                R.id.option4 -> {
+//                    ballotViewModel.answerCurrentCategory(0)
+//                    binding.option4.setBackgroundColor(Color.YELLOW)
+//                }
+//            }
+//        }
     }
 }

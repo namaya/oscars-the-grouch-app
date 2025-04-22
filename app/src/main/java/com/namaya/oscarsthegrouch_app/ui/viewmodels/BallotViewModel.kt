@@ -31,19 +31,20 @@ class BallotViewModel @Inject constructor(
         }
     }
 
-    private val _currentCategoryIdx: MutableLiveData<Int> = MutableLiveData(0)
+    private val _selectedCategoryIdx: MutableLiveData<Int> = MutableLiveData(0)
+    val selectedCategoryIdx: LiveData<Int> = _selectedCategoryIdx
 
     private val _categoryGuesses: MutableLiveData<Map<String, Int>> = MutableLiveData(mapOf())
     val categoryGuesses: LiveData<Map<String, Int>> = _categoryGuesses
 
     fun moveToCategory(index: Int) {
-        _currentCategoryIdx.value = index
+        _selectedCategoryIdx.value = index
     }
 
     fun answerCurrentCategory(guess: Int) {
         val currentCategory = when (val state = _categoryBank.value) {
             is UiState.Success -> {
-                state.value[_currentCategoryIdx.value!!]
+                state.value[_selectedCategoryIdx.value!!]
             }
             else -> throw Exception("Invalid state")
         }
