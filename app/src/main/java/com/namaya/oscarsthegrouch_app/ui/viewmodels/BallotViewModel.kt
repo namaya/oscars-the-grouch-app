@@ -1,5 +1,6 @@
 package com.namaya.oscarsthegrouch_app.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,10 +9,18 @@ import com.namaya.oscarsthegrouch_app.api.GameRepository
 import com.namaya.oscarsthegrouch_app.model.Category
 import com.namaya.oscarsthegrouch_app.model.Game
 import com.namaya.oscarsthegrouch_app.model.Nominee
+import com.namaya.oscarsthegrouch_app.model.Player
 import kotlinx.coroutines.launch
 import com.namaya.oscarsthegrouch_app.ui.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.selects.select
 import javax.inject.Inject
+
+data class PlayerCategoryState(
+    val playerId: String = "",
+    val selectedCategoryIdx: Int = 0,
+    val categoryGuesses: Map<String, Nominee> = mapOf()
+)
 
 @HiltViewModel
 class BallotViewModel @Inject constructor(
@@ -32,26 +41,49 @@ class BallotViewModel @Inject constructor(
         }
     }
 
-    private val _selectedCategoryIdx: MutableLiveData<Int> = MutableLiveData(0)
-//    val selectedCategoryIdx: LiveData<Int> = _selectedCategoryIdx
+    private val _playerCategoryStates: MutableLiveData<Map<String, PlayerCategoryState>> = MutableLiveData(mapOf())
+    val playerCategoryStates: LiveData<Map<String, PlayerCategoryState>> = _playerCategoryStates
+    val selectedPlayerState: MutableLiveData<PlayerCategoryState> = MutableLiveData(null)
 
-    private val _categoryGuesses: MutableLiveData<Map<String, Nominee>> = MutableLiveData(mapOf())
-    val categoryGuesses: LiveData<Map<String, Nominee>> = _categoryGuesses
+    fun initializePlayer(playerId: String) {
+        if (!_playerCategoryStates.value!!.containsKey(playerId)) {
+            _playerCategoryStates.value = _playerCategoryStates.value!!.toMutableMap().apply {
+                Log.d("BallotViewModel", "Resetting player $playerId")
+                this[playerId] = PlayerCategoryState(playerId=playerId)
+            }
+        }
+        selectedPlayerState.value = _playerCategoryStates.value!![playerId]!!
+    }
 
     fun moveToCategory(index: Int) {
-        _selectedCategoryIdx.value = index
+        selectedPlayerState.value = selectedPlayerState.value!!.copy(selectedCategoryIdx = index)
     }
 
     fun answerCategory(guess: Nominee) {
         val currentCategory = when (val state = _categoryBank.value) {
             is UiState.Success -> {
-                state.value[_selectedCategoryIdx.value!!]
+                state.value[selectedPlayerState.value!!.selectedCategoryIdx]
             }
-            else -> throw Exception("Invalid state")
+            else -> {
+                Log.e("BallotViewModel", "Category bank not loaded properly")
+                return
+            }
         }
 
-        val newCategoryGuesses = _categoryGuesses.value!!.toMutableMap()
+        val newCategoryGuesses = selectedPlayerState.value!!.categoryGuesses.toMutableMap()
         newCategoryGuesses[currentCategory.id] = guess
-        _categoryGuesses.value = newCategoryGuesses
+
+        selectedPlayerState.value = selectedPlayerState.value!!.copy(categoryGuesses = newCategoryGuesses)
     }
+
+    fun savePlayerState() {
+        val playerId = selectedPlayerState.value!!.playerId
+        val playerState = selectedPlayerState.value!!
+
+        _playerCategoryStates.value = _playerCategoryStates.value!!.toMutableMap().apply {
+            Log.d("BallotViewModel", "Saving player $playerId")
+            this[playerId] = playerState
+        }
+    }
+
 }

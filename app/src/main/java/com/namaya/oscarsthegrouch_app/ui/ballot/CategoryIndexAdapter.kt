@@ -37,11 +37,11 @@ class CategoryIndexAdapter(
 
     object CategoryIndexDiffCallback : DiffUtil.ItemCallback<CategoryIndexItem>() {
         override fun areItemsTheSame(oldItem: CategoryIndexItem, newItem: CategoryIndexItem): Boolean {
-            return oldItem.index == newItem.index
+            return oldItem.index == newItem.index && oldItem.isAnswered == newItem.isAnswered
         }
 
         override fun areContentsTheSame(oldItem: CategoryIndexItem, newItem: CategoryIndexItem): Boolean {
-            return oldItem.isAnswered == newItem.isAnswered
+            return oldItem.index == newItem.index && oldItem.isAnswered == newItem.isAnswered
         }
     }
 }

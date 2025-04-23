@@ -1,6 +1,7 @@
 package com.namaya.oscarsthegrouch_app.ui.ballot
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,12 +34,28 @@ class FillBallotFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val adapter = CategoryIndexAdapter {
+            binding.viewPager.currentItem = it
+        }
+
         gamesViewModel.selectedPlayer.observe(viewLifecycleOwner) {
+            ballotViewModel.initializePlayer(it.id)
             binding.ballotsPlayerName.text = it.user.name
         }
 
-        val adapter = CategoryIndexAdapter {
-            binding.viewPager.currentItem = it
+        ballotViewModel.selectedPlayerState.observe(viewLifecycleOwner) {
+            val cb = when (val state = ballotViewModel.categoryBank.value) {
+                is UiState.Success -> state.value
+                is UiState.Loading -> emptyList()
+                else -> throw Exception("Invalid state")
+            }
+
+            val items =
+                List(cb.size) { index -> CategoryIndexItem(index, it.categoryGuesses[cb[index].id] != null) }
+
+            Log.d("FillBallotFragment", "items: $items")
+
+            adapter.submitList(items)
         }
 
         ballotViewModel.categoryBank.observe(viewLifecycleOwner) {
@@ -52,24 +69,15 @@ class FillBallotFragment: Fragment() {
                     binding.viewPager.visibility = View.VISIBLE
 
                     binding.statusIndicator.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
-                    // TODO: isAnswered could be true
-                    val items =
-                        List(it.value.size) { index -> CategoryIndexItem(index, false) }
-
                     binding.statusIndicator.adapter = adapter
                     binding.viewPager.adapter = CategoryFragmentAdapter(this, it.value)
 
-                    adapter.submitList(items)
-                    // TODO: save position in persistent store
-                    ballotViewModel.moveToCategory(0)
-
-//                    binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
-//                        override fun onPageSelected(position: Int) {
-//                            super.onPageSelected(position)
-//                            ballotViewModel.moveToCategory(position)
-//                        }
-//                    })
+                    binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+                        override fun onPageSelected(position: Int) {
+                            super.onPageSelected(position)
+                            ballotViewModel.moveToCategory(position)
+                        }
+                    })
                 }
                 is UiState.Error -> {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
@@ -77,7 +85,7 @@ class FillBallotFragment: Fragment() {
             }
         }
 
-        ballotViewModel.categoryGuesses.observe(viewLifecycleOwner) {
+        ballotViewModel.selectedPlayerState.observe(viewLifecycleOwner) {
             val cb = when (val state = ballotViewModel.categoryBank.value) {
                 is UiState.Success -> state.value
                 is UiState.Loading -> emptyList()
@@ -85,7 +93,7 @@ class FillBallotFragment: Fragment() {
             }
 
             val newItems = List(adapter.currentList.size) { index ->
-                val isAnswered = it[cb[index].id] != null
+                val isAnswered = it.categoryGuesses[cb[index].id] != null
                 CategoryIndexItem(index, isAnswered)
             }
 
@@ -93,6 +101,7 @@ class FillBallotFragment: Fragment() {
         }
 
         binding.homeB.setOnClickListener {
+            ballotViewModel.savePlayerState()
             val navController = findNavController()
             val action = FillBallotFragmentDirections.toGameHomeScreen()
             navController.navigate(action)
