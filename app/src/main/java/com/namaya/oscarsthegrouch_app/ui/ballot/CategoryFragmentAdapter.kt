@@ -49,6 +49,8 @@ class CategoryFragment(private val category: Category): Fragment() {
         binding.choicesRV.adapter = adapter
         binding.choicesRV.layoutManager = LinearLayoutManager(requireContext())
 
-        adapter.submitList(category.nominees)
+        val nomineeItems = category.nominees.map { NomineeItem(it, it == ballotViewModel.selectedPlayerState.value!!.categoryGuesses[category.id]) }
+
+        adapter.submitList(nomineeItems)
     }
 }

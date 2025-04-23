@@ -13,19 +13,20 @@ import com.namaya.oscarsthegrouch_app.databinding.NomineeCardBinding
 import com.namaya.oscarsthegrouch_app.databinding.UserAvatarBinding
 import com.namaya.oscarsthegrouch_app.model.Nominee
 
+data class NomineeItem(val nominee: Nominee, val isSelected: Boolean)
+
 class NomineeAdapter(
     private val onItemClick: (Nominee) -> Unit
-) : ListAdapter<Nominee, NomineeAdapter.NomineeViewHolder>(ItemDiffCallback)
-{
+) : ListAdapter<NomineeItem, NomineeAdapter.NomineeViewHolder>(ItemDiffCallback) {
+
     private var selectedPos = RecyclerView.NO_POSITION
 
-    inner class NomineeViewHolder(private val vb: NomineeCardBinding): RecyclerView.ViewHolder(vb.root) {
-        fun bind(item: Nominee) {
-            vb.nomineeTV.text = item.work + " - " + item.contributor
+    inner class NomineeViewHolder(private val vb: NomineeCardBinding) :
+        RecyclerView.ViewHolder(vb.root) {
+        fun bind(item: NomineeItem) {
+            vb.nomineeTV.text = item.nominee.work + " - " + item.nominee.contributor
 
-            if (selectedPos != adapterPosition) {
-                vb.root.setBackgroundColor(Color.TRANSPARENT)
-            }
+            vb.root.setBackgroundColor(if (item.isSelected) Color.YELLOW else Color.TRANSPARENT)
 
             vb.root.setOnClickListener {
                 val prevPos = selectedPos
@@ -36,7 +37,8 @@ class NomineeAdapter(
                 }
 
                 vb.root.setBackgroundColor(Color.YELLOW)
-                onItemClick(item)
+
+                onItemClick(item.nominee)
             }
         }
     }
@@ -50,13 +52,14 @@ class NomineeAdapter(
         holder.bind(currentList[position])
     }
 
-    object ItemDiffCallback : DiffUtil.ItemCallback<Nominee>() {
-        override fun areItemsTheSame(oldItem: Nominee, newItem: Nominee): Boolean {
-            return oldItem.work == newItem.work && oldItem.contributor == newItem.contributor
+    object ItemDiffCallback : DiffUtil.ItemCallback<NomineeItem>() {
+        override fun areItemsTheSame(oldItem: NomineeItem, newItem: NomineeItem): Boolean {
+            return oldItem.nominee.work == newItem.nominee.work &&
+                    oldItem.nominee.contributor == newItem.nominee.contributor
         }
 
-        override fun areContentsTheSame(oldItem: Nominee, newItem: Nominee): Boolean {
-            return oldItem.work == newItem.work && oldItem.contributor == newItem.contributor
+        override fun areContentsTheSame(oldItem: NomineeItem, newItem: NomineeItem): Boolean {
+            return oldItem == newItem
         }
     }
 }
