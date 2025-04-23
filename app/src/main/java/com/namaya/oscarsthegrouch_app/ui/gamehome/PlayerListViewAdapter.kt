@@ -36,11 +36,10 @@ class PlayerListViewAdapter(
 
     object ItemDiffCallback : DiffUtil.ItemCallback<Player>() {
         override fun areItemsTheSame(oldItem: Player, newItem: Player): Boolean {
-            return oldItem.user.id == newItem.user.id
+            return oldItem.id == newItem.id
         }
-        // TODO: make this more robust
         override fun areContentsTheSame(oldItem: Player, newItem: Player): Boolean {
-            return oldItem.user.name == newItem.user.name
+            return oldItem == newItem
         }
     }
 }

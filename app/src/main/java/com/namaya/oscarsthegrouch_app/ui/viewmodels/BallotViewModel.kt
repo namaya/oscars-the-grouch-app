@@ -10,6 +10,7 @@ import com.namaya.oscarsthegrouch_app.model.Category
 import com.namaya.oscarsthegrouch_app.model.Game
 import com.namaya.oscarsthegrouch_app.model.Nominee
 import com.namaya.oscarsthegrouch_app.model.Player
+import com.namaya.oscarsthegrouch_app.model.Vote
 import kotlinx.coroutines.launch
 import com.namaya.oscarsthegrouch_app.ui.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -83,6 +84,28 @@ class BallotViewModel @Inject constructor(
         _playerCategoryStates.value = _playerCategoryStates.value!!.toMutableMap().apply {
             Log.d("BallotViewModel", "Saving player $playerId")
             this[playerId] = playerState
+        }
+    }
+
+    fun submitBallot(userId: String, gameId: String) {
+        viewModelScope.launch {
+            val cb = when (val state = _categoryBank.value) {
+                is UiState.Success -> state.value
+                is UiState.Loading -> emptyList()
+                else -> throw Exception("Invalid state")
+            }
+
+            val playerId = selectedPlayerState.value!!.playerId
+            val votes = selectedPlayerState.value!!.categoryGuesses.map {
+                // TODO: verify this works
+                val vote = cb.filter { cat -> cat.id == it.key }
+                    .map { cat -> cat.nominees.indexOf(it.value) }
+                    .first()
+
+                Vote(it.key, vote)
+            }
+
+            gameRepository.submitBallot(userId, gameId, playerId, votes)
         }
     }
 

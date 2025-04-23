@@ -16,6 +16,7 @@ import com.namaya.oscarsthegrouch_app.databinding.FragmentFillBallotBinding
 import com.namaya.oscarsthegrouch_app.ui.UiState
 import com.namaya.oscarsthegrouch_app.ui.viewmodels.BallotViewModel
 import com.namaya.oscarsthegrouch_app.ui.viewmodels.GamesViewModel
+import com.namaya.oscarsthegrouch_app.ui.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,6 +24,7 @@ class FillBallotFragment: Fragment() {
     private var _binding: FragmentFillBallotBinding? = null
     private val binding get() = _binding!! // only valid between onCreateView and onDestroyView
 
+    private val userViewModel: UserViewModel by activityViewModels()
     private val gamesViewModel: GamesViewModel by activityViewModels()
     private val ballotViewModel: BallotViewModel by activityViewModels()
 
@@ -102,6 +104,23 @@ class FillBallotFragment: Fragment() {
 
         binding.homeB.setOnClickListener {
             ballotViewModel.savePlayerState()
+            val navController = findNavController()
+            val action = FillBallotFragmentDirections.toGameHomeScreen()
+            navController.navigate(action)
+        }
+
+        binding.submitB.setOnClickListener {
+            val userId = when (val state = userViewModel.user.value) {
+                is UiState.Success -> state.value.id
+                else -> throw Exception("Invalid state")
+            }
+
+            val gameId = when (val state = gamesViewModel.selectedGame.value) {
+                is UiState.Success -> state.value.id
+                else -> throw Exception("Invalid state")
+            }
+
+            ballotViewModel.submitBallot(userId, gameId)
             val navController = findNavController()
             val action = FillBallotFragmentDirections.toGameHomeScreen()
             navController.navigate(action)

@@ -44,7 +44,7 @@ class GameHomeFragment: Fragment() {
             when (it) {
                 is UiState.Success -> {
                     binding.gameName.text = it.value.name
-                    gamesViewModel.fetchPlayers(it.value)
+                    gamesViewModel.fetchPlayersPoll(it.value)
                     ballotViewModel.fetchCategories(it.value)
                 }
 
@@ -55,6 +55,8 @@ class GameHomeFragment: Fragment() {
         gamesViewModel.players.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Success -> {
+                    val states = it.value.map { player -> player.state }
+                    Log.d("GameHomeFragment", "players loaded ${states}")
                     adapter.submitList(it.value)
                 }
 

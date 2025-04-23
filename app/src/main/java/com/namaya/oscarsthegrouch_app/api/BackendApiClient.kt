@@ -1,7 +1,9 @@
 package com.namaya.oscarsthegrouch_app.api
 
+import com.namaya.oscarsthegrouch_app.model.Ballot
 import com.namaya.oscarsthegrouch_app.model.Category
 import com.namaya.oscarsthegrouch_app.model.Game
+import com.namaya.oscarsthegrouch_app.model.Vote
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -104,4 +106,14 @@ interface BackendApiClient {
     data class ListNominationsResponse(val categories: List<Category>)
     @GET("api/games/{id}/nominations")
     suspend fun listNominations(@Header("Authorization") userId: String, @Path("id") gameId: String): ListNominationsResponse
+
+    data class SubmitBallotRequest(val votes: List<Vote>)
+    data class SubmitBallotResponse(val ballot: Ballot)
+    @POST("api/games/{gid}/players/{pid}/ballots")
+    suspend fun submitBallot(
+        @Header("Authorization") userId: String,
+        @Path("gid") gameId: String,
+        @Path("pid") playerId: String,
+        @Body request: SubmitBallotRequest
+    ): SubmitBallotResponse
 }

@@ -9,6 +9,7 @@ import com.namaya.oscarsthegrouch_app.api.GameRepository
 import com.namaya.oscarsthegrouch_app.model.Player
 import com.namaya.oscarsthegrouch_app.ui.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -74,6 +75,23 @@ class GamesViewModel @Inject constructor(
                     else -> UiState.Error("Error adding player")
                 }
             addedPlayerState.value = UiState.Success(player)
+        }
+    }
+
+    private val pollingIntervalMs: Long = 2000
+
+    fun fetchPlayersPoll(game: Game) {
+        viewModelScope.launch {
+            while (true) {
+                _players.value = try {
+                    val data = game.getPlayers()
+                    UiState.Success(data)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    UiState.Error("Error loading players")
+                }
+                delay(pollingIntervalMs)
+            }
         }
     }
 }
