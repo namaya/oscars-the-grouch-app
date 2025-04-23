@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.namaya.oscarsthegrouch_app.databinding.EndgameScreenBinding
 import com.namaya.oscarsthegrouch_app.databinding.GameScreenBinding
 import com.namaya.oscarsthegrouch_app.ui.UiState
+import com.namaya.oscarsthegrouch_app.ui.login.LoginFragmentDirections.Companion.toGamesListScreen
 import com.namaya.oscarsthegrouch_app.ui.viewmodels.BallotViewModel
 import com.namaya.oscarsthegrouch_app.ui.viewmodels.GamesViewModel
 
@@ -28,6 +30,13 @@ class EndGameFragment: Fragment() {
             is UiState.Success -> game.value.maxByOrNull { it.score }
             else -> null
         }
+
         binding.congratsTV.text = "Congratulations, ${winner?.user?.name}!"
+
+        binding.homeB.setOnClickListener {
+            val navController = findNavController()
+            val action = EndGameFragmentDirections.toGamesListScreen()
+            navController.navigate(action)
+        }
     }
 }

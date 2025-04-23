@@ -98,8 +98,8 @@
         android:label="EndGame"
         >
         <action
-            android:id="@+id/toGameHomeScreen"
-            app:destination="@id/gameHomeScreen"
+            android:id="@+id/toGamesListScreen"
+            app:destination="@id/gamesListScreen"
             />
     </fragment>
 
