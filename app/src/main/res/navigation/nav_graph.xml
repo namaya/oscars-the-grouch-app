@@ -62,6 +62,12 @@
             app:destination="@id/addPlayerScreen"
             >
         </action>
+
+        <action
+            android:id="@+id/toEndGameScreen"
+            app:destination="@id/endGameScreen"
+            >
+        </action>
     </fragment>
 
     <fragment
@@ -79,6 +85,17 @@
         android:id="@+id/addPlayerScreen"
         android:name="com.namaya.oscarsthegrouch_app.ui.gamehome.AddPlayerFragment"
         android:label="AddPlayer"
+        >
+        <action
+            android:id="@+id/toGameHomeScreen"
+            app:destination="@id/gameHomeScreen"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/endGameScreen"
+        android:name="com.namaya.oscarsthegrouch_app.ui.gamehome.EndGameFragment"
+        android:label="EndGame"
         >
         <action
             android:id="@+id/toGameHomeScreen"

@@ -94,4 +94,26 @@ class GamesViewModel @Inject constructor(
             }
         }
     }
+
+    fun startGame() {
+        viewModelScope.launch {
+            val game = when (val game = selectedGame.value) {
+                is UiState.Success -> game.value
+                else -> return@launch
+            }
+
+            game.start()
+        }
+    }
+
+    fun endGame() {
+        viewModelScope.launch {
+            val game = when (val game = selectedGame.value) {
+                is UiState.Success -> game.value
+                else -> return@launch
+            }
+
+            game.end()
+        }
+    }
 }

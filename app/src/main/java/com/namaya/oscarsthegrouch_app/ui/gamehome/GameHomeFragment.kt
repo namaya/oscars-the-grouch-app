@@ -30,7 +30,6 @@ class GameHomeFragment: Fragment() {
         val ctx = requireContext()
         val layoutManager = LinearLayoutManager(ctx)
         val adapter = PlayerListViewAdapter {
-            Log.d("GameHomeFragment", "player clicked $it")
             gamesViewModel.selectedPlayer.value = it
             val navController = findNavController()
             val action = GameHomeFragmentDirections.toBallotScreen()
@@ -55,8 +54,6 @@ class GameHomeFragment: Fragment() {
         gamesViewModel.players.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Success -> {
-                    val states = it.value.map { player -> player.state }
-                    Log.d("GameHomeFragment", "players loaded ${states}")
                     adapter.submitList(it.value)
                 }
 
@@ -65,15 +62,27 @@ class GameHomeFragment: Fragment() {
         }
 
         binding.startGameButton.setOnClickListener {
-            // TODO: check if game is ready to start
-//            val navController = findNavController()
-//            val action = GameHomeFragmentDirections.toBallotScreen()
-//            navController.navigate(action)
+            binding.lobbyFooter.visibility = View.GONE
+            binding.activeFooter.visibility = View.VISIBLE
+            gamesViewModel.startGame()
         }
 
         binding.addPlayerB.setOnClickListener {
             val navController = findNavController()
             val action = GameHomeFragmentDirections.toAddPlayerScreen()
+            navController.navigate(action)
+        }
+
+        binding.answerB.setOnClickListener {
+//            val navController = findNavController()
+//            val action = GameHomeFragmentDirections.toAnswerScreen()
+//            navController.navigate(action)
+        }
+
+        binding.endB.setOnClickListener {
+            gamesViewModel.endGame()
+            val navController = findNavController()
+            val action = GameHomeFragmentDirections.toEndGameScreen()
             navController.navigate(action)
         }
 

@@ -26,6 +26,14 @@ data class Game(
         return player
     }
 
+    suspend fun start() {
+//        apiClient.startGame(ownerId, id)
+    }
+
+    suspend fun end() {
+//        apiClient.endGame(ownerId, id)
+    }
+
     fun withPlayers(players: List<Player>): Game {
         return Game(id, name, state, ownerId, players, apiClient)
     }

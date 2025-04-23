@@ -35,28 +35,62 @@
         app:layout_constraintStart_toStartOf="parent"
         />
 
-    <LinearLayout
-        android:id="@+id/footer"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         >
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/startGameButton"
-            android:text="START GAME"
-            />
 
-        <Button
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/lobbyFooter"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/addPlayerB"
-            android:text="ADD PLAYER"
-            />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="20dp"
+            >
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/startGameButton"
+                android:text="START GAME"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addPlayerB"
+                android:text="ADD PLAYER"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/activeFooter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="20dp"
+            android:visibility="gone"
+            >
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/answerB"
+                android:text="ANSWER"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/endB"
+                android:text="END GAME"
+                />
+        </LinearLayout>
+
+
+
+    </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
