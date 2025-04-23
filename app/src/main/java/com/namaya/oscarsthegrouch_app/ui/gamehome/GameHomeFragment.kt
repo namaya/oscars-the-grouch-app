@@ -1,6 +1,7 @@
 package com.namaya.oscarsthegrouch_app.ui.gamehome
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,11 @@ class GameHomeFragment: Fragment() {
         val ctx = requireContext()
         val layoutManager = LinearLayoutManager(ctx)
         val adapter = PlayerListViewAdapter {
+            Log.d("GameHomeFragment", "player clicked $it")
             gamesViewModel.selectedPlayer.value = it
+            val navController = findNavController()
+            val action = GameHomeFragmentDirections.toBallotScreen()
+            navController.navigate(action)
         }
 
         binding.playerListView.layoutManager = layoutManager
@@ -55,12 +60,6 @@ class GameHomeFragment: Fragment() {
 
                 else -> {}
             }
-        }
-
-        gamesViewModel.selectedPlayer.observe(viewLifecycleOwner) {
-            val navController = findNavController()
-            val action = GameHomeFragmentDirections.toBallotScreen()
-            navController.navigate(action)
         }
 
         binding.startGameButton.setOnClickListener {

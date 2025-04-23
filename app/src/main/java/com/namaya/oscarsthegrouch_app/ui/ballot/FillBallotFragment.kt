@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -63,12 +64,12 @@ class FillBallotFragment: Fragment() {
                     // TODO: save position in persistent store
                     ballotViewModel.moveToCategory(0)
 
-                    binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
-                        override fun onPageSelected(position: Int) {
-                            super.onPageSelected(position)
-                            ballotViewModel.moveToCategory(position)
-                        }
-                    })
+//                    binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+//                        override fun onPageSelected(position: Int) {
+//                            super.onPageSelected(position)
+//                            ballotViewModel.moveToCategory(position)
+//                        }
+//                    })
                 }
                 is UiState.Error -> {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
@@ -79,6 +80,7 @@ class FillBallotFragment: Fragment() {
         ballotViewModel.categoryGuesses.observe(viewLifecycleOwner) {
             val cb = when (val state = ballotViewModel.categoryBank.value) {
                 is UiState.Success -> state.value
+                is UiState.Loading -> emptyList()
                 else -> throw Exception("Invalid state")
             }
 
@@ -88,6 +90,12 @@ class FillBallotFragment: Fragment() {
             }
 
             adapter.submitList(newItems)
+        }
+
+        binding.homeB.setOnClickListener {
+            val navController = findNavController()
+            val action = FillBallotFragmentDirections.toGameHomeScreen()
+            navController.navigate(action)
         }
     }
 

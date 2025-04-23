@@ -69,6 +69,10 @@
         android:name="com.namaya.oscarsthegrouch_app.ui.ballot.FillBallotFragment"
         android:label="Ballot"
         >
+        <action
+            android:id="@+id/toGameHomeScreen"
+            app:destination="@id/gameHomeScreen"
+            />
     </fragment>
 
     <fragment
