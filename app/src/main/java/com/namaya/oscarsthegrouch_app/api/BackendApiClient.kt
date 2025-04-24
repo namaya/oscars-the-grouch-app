@@ -133,4 +133,12 @@ interface BackendApiClient {
         @Header("Authorization") userId: String,
         @Path("gid") gameId: String
     ): FetchMasterBallotResponse
+
+    data class UpdateGameRequest(val state: String)
+    @PATCH("api/games/{gid}")
+    suspend fun updateGame(
+        @Header("Authorization") userId: String,
+        @Path("gid") gameId: String,
+        @Body request: UpdateGameRequest
+    )
 }

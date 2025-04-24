@@ -24,7 +24,8 @@ class NomineeAdapter(
     inner class NomineeViewHolder(private val vb: NomineeCardBinding) :
         RecyclerView.ViewHolder(vb.root) {
         fun bind(item: NomineeItem) {
-            vb.nomineeTV.text = item.nominee.work + " - " + item.nominee.contributor
+            vb.workTV.text = item.nominee.work
+            vb.contributorTV.text = item.nominee.contributor
 
             vb.root.setBackgroundColor(if (item.isSelected) Color.YELLOW else Color.TRANSPARENT)
 

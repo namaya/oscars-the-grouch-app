@@ -113,7 +113,7 @@ class GamesViewModel @Inject constructor(
                 else -> return@launch
             }
 
-            selectedGame.value = UiState.Success(game.withState("Done"))
+            selectedGame.value = UiState.Success(game.end())
         }
     }
 }

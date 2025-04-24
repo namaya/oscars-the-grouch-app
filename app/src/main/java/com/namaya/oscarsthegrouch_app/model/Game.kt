@@ -31,8 +31,9 @@ data class Game(
         return Game(id, name, state, ownerId, players, apiClient)
     }
 
-    suspend fun end() {
-//        apiClient.endGame(ownerId, id)
+    suspend fun end(): Game {
+        apiClient.updateGame(ownerId, id, BackendApiClient.UpdateGameRequest("Done"))
+        return Game(id, name, "Done", ownerId, players, apiClient)
     }
 
     fun withPlayers(players: List<Player>): Game {

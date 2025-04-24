@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.namaya.oscarsthegrouch_app.databinding.ActivityMainBinding
 import com.namaya.oscarsthegrouch_app.ui.UiState
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val userViewModel: UserViewModel by viewModels()
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 val navHostFragment =
                     supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
-                val navController = navHostFragment.navController
+                navController = navHostFragment.navController
 
                 userViewModel.user.observe(this@MainActivity) { result ->
                     when (result) {
@@ -59,5 +61,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         userViewModel.fetchUser()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

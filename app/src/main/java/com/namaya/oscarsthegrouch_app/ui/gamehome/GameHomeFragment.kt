@@ -1,5 +1,6 @@
 package com.namaya.oscarsthegrouch_app.ui.gamehome
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,16 +29,6 @@ class GameHomeFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val ctx = requireContext()
-        val layoutManager = LinearLayoutManager(ctx)
-        val adapter = PlayerListViewAdapter {
-            gamesViewModel.selectedPlayer.value = it
-            val navController = findNavController()
-            val action = GameHomeFragmentDirections.toBallotScreen()
-            navController.navigate(action)
-        }
-
-        binding.playerListView.layoutManager = layoutManager
-        binding.playerListView.adapter = adapter
 
         gamesViewModel.selectedGame.observe(viewLifecycleOwner) {
             when (it) {
@@ -45,20 +36,42 @@ class GameHomeFragment: Fragment() {
                     binding.gameName.text = it.value.name
                     gamesViewModel.fetchPlayersPoll(it.value)
                     ballotViewModel.fetchCategories(it.value)
+                    val layoutManager = LinearLayoutManager(ctx)
+                    val adapter = PlayerListViewAdapter { player ->
+                        if (it.value.state == "Active") return@PlayerListViewAdapter
+                        if (it.value.state == "Done") return@PlayerListViewAdapter
+
+                        gamesViewModel.selectedPlayer.value = player
+                        val navController = findNavController()
+                        val action = GameHomeFragmentDirections.toBallotScreen()
+                        navController.navigate(action)
+                    }
+
+                    binding.playerListView.layoutManager = layoutManager
+                    binding.playerListView.adapter = adapter
                     if (it.value.state == "Active") {
                         binding.lobbyFooter.visibility = View.GONE
                         binding.activeFooter.visibility = View.VISIBLE
+                        binding.header.setBackgroundColor(Color.RED)
+                        binding.footer.setBackgroundColor(Color.RED)
+                    } else if (it.value.state == "Done") {
+                        binding.lobbyFooter.visibility = View.VISIBLE
+                        binding.activeFooter.visibility = View.GONE
+                        binding.header.setBackgroundColor(Color.GREEN)
+                        binding.footer.setBackgroundColor(Color.GREEN)
+                        binding.startGameButton.visibility = View.GONE
+                        binding.addPlayerB.visibility = View.GONE
                     }
-                }
 
-                else -> {}
-            }
-        }
+                    gamesViewModel.players.observe(viewLifecycleOwner) { players ->
+                        when (players) {
+                            is UiState.Success -> {
+                                adapter.submitList(players.value)
+                            }
 
-        gamesViewModel.players.observe(viewLifecycleOwner) {
-            when (it) {
-                is UiState.Success -> {
-                    adapter.submitList(it.value)
+                            else -> {}
+                        }
+                    }
                 }
 
                 else -> {}
