@@ -68,6 +68,12 @@
             app:destination="@id/endGameScreen"
             >
         </action>
+
+        <action
+            android:id="@+id/toAnswerScreen"
+            app:destination="@id/answerScreen"
+            >
+        </action>
     </fragment>
 
     <fragment
@@ -100,6 +106,17 @@
         <action
             android:id="@+id/toGamesListScreen"
             app:destination="@id/gamesListScreen"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/answerScreen"
+        android:name="com.namaya.oscarsthegrouch_app.ui.answer.AnswerFragment"
+        android:label="Answer"
+        >
+        <action
+            android:id="@+id/toGameHomeScreen"
+            app:destination="@id/gameHomeScreen"
             />
     </fragment>
 

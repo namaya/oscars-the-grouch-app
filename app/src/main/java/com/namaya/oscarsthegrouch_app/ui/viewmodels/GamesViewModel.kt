@@ -102,7 +102,7 @@ class GamesViewModel @Inject constructor(
                 else -> return@launch
             }
 
-            game.start()
+            selectedGame.value = UiState.Success(game.withState("Active"))
         }
     }
 
@@ -113,7 +113,7 @@ class GamesViewModel @Inject constructor(
                 else -> return@launch
             }
 
-            game.end()
+            selectedGame.value = UiState.Success(game.withState("Done"))
         }
     }
 }

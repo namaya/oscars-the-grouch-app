@@ -26,8 +26,9 @@ data class Game(
         return player
     }
 
-    suspend fun start() {
+    suspend fun withState(state: String): Game {
 //        apiClient.startGame(ownerId, id)
+        return Game(id, name, state, ownerId, players, apiClient)
     }
 
     suspend fun end() {

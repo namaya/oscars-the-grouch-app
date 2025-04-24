@@ -109,4 +109,34 @@ class BallotViewModel @Inject constructor(
         }
     }
 
+    private val _masterBallotState: MutableLiveData<UiState<List<Vote>>> = MutableLiveData(UiState.Loading)
+    val masterBallotState: LiveData<UiState<List<Vote>>> = _masterBallotState
+
+    fun fetchMasterBallot(game: Game) {
+        _masterBallotState.value = UiState.Loading
+
+        viewModelScope.launch {
+            _masterBallotState.value = try {
+                val votes = gameRepository.fetchMasterBallot(game.ownerId, game.id)
+                UiState.Success(votes)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                UiState.Error("Error loading masterballot votes")
+            }
+        }
+    }
+
+    private val _masterBallotCategoryIdx: MutableLiveData<Int> = MutableLiveData(0)
+    val masterBallotCategoryIdx: LiveData<Int> = _masterBallotCategoryIdx
+
+    fun moveMasterBallotCategory(index: Int) {
+        _masterBallotCategoryIdx.value = index
+    }
+
+    fun submitAnswer(userId: String, gameId: String, categoryId: String, vote: Int) {
+        viewModelScope.launch {
+            gameRepository.submitAnswer(userId, gameId, categoryId, vote)
+        }
+    }
+
 }

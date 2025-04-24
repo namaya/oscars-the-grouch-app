@@ -17,6 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Streaming
@@ -116,4 +117,20 @@ interface BackendApiClient {
         @Path("pid") playerId: String,
         @Body request: SubmitBallotRequest
     ): SubmitBallotResponse
+
+    data class SubmitAnswerRequest(val categoryId: String, val vote: Int)
+    data class SubmitAnswerResponse(val answer: Int)
+    @PATCH("api/games/{gid}/masterballot")
+    suspend fun submitAnswer(
+        @Header("Authorization") userId: String,
+        @Path("gid") gameId: String,
+        @Body request: SubmitAnswerRequest
+    ): SubmitAnswerResponse
+
+    data class FetchMasterBallotResponse(val votes: List<Vote>)
+    @GET("api/games/{gid}/masterballot")
+    suspend fun fetchMasterBallot(
+        @Header("Authorization") userId: String,
+        @Path("gid") gameId: String
+    ): FetchMasterBallotResponse
 }

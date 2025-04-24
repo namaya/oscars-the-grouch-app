@@ -40,4 +40,17 @@ class GameRepository @Inject constructor(private val apiClient: BackendApiClient
         Log.d("GameRepository", "Submitted ballot: $resBody")
     }
 
+    suspend fun submitAnswer(userId: String, gameId: String, categoryId: String, vote: Int) {
+        val resBody = apiClient.submitAnswer(userId, gameId, BackendApiClient.SubmitAnswerRequest(categoryId, vote))
+        Log.d("GameRepository", "Submitted answer: $resBody")
+    }
+
+    suspend fun fetchMasterBallot(userId: String, gameId: String): List<Vote> {
+        val resBody = apiClient.fetchMasterBallot(userId, gameId)
+        Log.d("GameRepository", "Fetched master ballot: $resBody")
+        val answers = resBody.votes.map {
+            Vote(it.categoryId, it.vote)
+        }
+        return answers
+    }
 }

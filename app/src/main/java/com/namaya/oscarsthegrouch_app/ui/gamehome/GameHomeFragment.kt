@@ -45,6 +45,10 @@ class GameHomeFragment: Fragment() {
                     binding.gameName.text = it.value.name
                     gamesViewModel.fetchPlayersPoll(it.value)
                     ballotViewModel.fetchCategories(it.value)
+                    if (it.value.state == "Active") {
+                        binding.lobbyFooter.visibility = View.GONE
+                        binding.activeFooter.visibility = View.VISIBLE
+                    }
                 }
 
                 else -> {}
@@ -74,9 +78,15 @@ class GameHomeFragment: Fragment() {
         }
 
         binding.answerB.setOnClickListener {
-//            val navController = findNavController()
-//            val action = GameHomeFragmentDirections.toAnswerScreen()
-//            navController.navigate(action)
+            val game = when (val state = gamesViewModel.selectedGame.value) {
+                is UiState.Success -> state.value
+                else -> throw Exception("Invalid state")
+            }
+
+            ballotViewModel.fetchMasterBallot(game)
+            val navController = findNavController()
+            val action = GameHomeFragmentDirections.toAnswerScreen()
+            navController.navigate(action)
         }
 
         binding.endB.setOnClickListener {
@@ -85,6 +95,19 @@ class GameHomeFragment: Fragment() {
             val action = GameHomeFragmentDirections.toEndGameScreen()
             navController.navigate(action)
         }
+
+//        val game = when (val state = gamesViewModel.selectedGame.value) {
+//            is UiState.Success -> state.value
+//            else -> throw Exception("Invalid state")
+//        }
+
+//        if (game.state == "Active") {
+//            binding.lobbyFooter.visibility = View.GONE
+//            binding.activeFooter.visibility = View.VISIBLE
+//        } else {
+//            binding.lobbyFooter.visibility = View.VISIBLE
+//            binding.activeFooter.visibility = View.GONE
+//        }
 
 //        binding.addGameButton.setOnClickListener { gameButtonView ->
 //            val addGameMenu = PopupMenu(ctx, gameButtonView)
