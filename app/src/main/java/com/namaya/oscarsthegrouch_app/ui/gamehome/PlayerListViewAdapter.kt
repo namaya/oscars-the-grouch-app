@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.namaya.oscarsthegrouch_app.databinding.PlayerCardBinding
 import com.namaya.oscarsthegrouch_app.model.Player
 import com.namaya.oscarsthegrouch_app.model.User
@@ -15,6 +16,14 @@ class PlayerListViewAdapter(
 ): ListAdapter<Player, PlayerListViewAdapter.ViewHolder>(ItemDiffCallback) {
     inner class ViewHolder(private val viewBinding: PlayerCardBinding): RecyclerView.ViewHolder(viewBinding.root) {
         fun bind(item: Player) {
+            Glide.with(viewBinding.root.context)
+                .load("http://10.0.2.2:8080${item.user.avatarUri}")
+                .override(100, 100)
+//                .placeholder(R.drawable.avatar_placeholder)
+//                .error(R.drawable.avatar_error)
+                .circleCrop() // optional: for rounded avatars
+                .into(viewBinding.avatarIV)
+
             viewBinding.playerName.text = item.user.name
             viewBinding.playerScore.text = String.format("%s", item.score)
             viewBinding.readyCheckmark.visibility = if (item.state == "Ready") View.VISIBLE else View.GONE
