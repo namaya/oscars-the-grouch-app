@@ -1,6 +1,7 @@
 package com.namaya.oscarsthegrouch_app.ui.gamehome
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.namaya.oscarsthegrouch_app.ui.login.AvatarListViewAdapter
 import com.namaya.oscarsthegrouch_app.ui.viewmodels.GamesViewModel
 import com.namaya.oscarsthegrouch_app.ui.viewmodels.UserViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.namaya.oscarsthegrouch_app.ui.UiState
 
 class AddPlayerFragment: Fragment() {
@@ -35,14 +37,21 @@ class AddPlayerFragment: Fragment() {
         }
 
         userViewModel.avatars.observe(viewLifecycleOwner) {
+            Log.d("AddPlayerFragment", "Avatars changed: $it")
             when (it) {
                 is UiState.Success -> {
-                    binding.avatarList.layoutManager = LinearLayoutManager(requireContext())
+                    binding.avatarList.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
                     binding.avatarList.adapter = adapter
 
                     adapter.submitList(it.value)
                 }
-                else -> Toast.makeText(requireContext(), "Error loading avatars", Toast.LENGTH_SHORT).show()
+                is UiState.Error -> {
+                    Log.e("AddPlayerFragment", it.message)
+                    Toast.makeText(requireContext(), "Error loading avatars", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    Log.d("AddPlayerFragment", "Loading avatars")
+                }
             }
         }
 
@@ -60,18 +69,11 @@ class AddPlayerFragment: Fragment() {
             }
 
             gamesViewModel.addPlayer(name, avatarUri)
-        }
 
-        gamesViewModel.addedPlayerState.observe(viewLifecycleOwner) {
-            when (it) {
-                is UiState.Success -> {
-                    Toast.makeText(requireContext(), "Player added", Toast.LENGTH_SHORT).show()
-                    val navController = findNavController()
+            Toast.makeText(requireContext(), "Player added", Toast.LENGTH_SHORT).show()
+            val navController = findNavController()
 
-                    navController.popBackStack()
-                }
-                else -> Toast.makeText(requireContext(), "Error adding player", Toast.LENGTH_SHORT).show()
-            }
+            navController.popBackStack()
         }
     }
 }

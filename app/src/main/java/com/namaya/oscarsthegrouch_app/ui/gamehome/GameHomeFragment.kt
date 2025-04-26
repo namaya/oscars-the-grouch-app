@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.namaya.oscarsthegrouch_app.R
 import com.namaya.oscarsthegrouch_app.databinding.GameScreenBinding
 import com.namaya.oscarsthegrouch_app.ui.UiState
 import com.namaya.oscarsthegrouch_app.ui.viewmodels.BallotViewModel
@@ -52,8 +53,9 @@ class GameHomeFragment: Fragment() {
                     if (it.value.state == "Active") {
                         binding.lobbyFooter.visibility = View.GONE
                         binding.activeFooter.visibility = View.VISIBLE
-                        binding.header.setBackgroundColor(Color.RED)
-                        binding.footer.setBackgroundColor(Color.RED)
+
+                        binding.header.setBackgroundColor(resources.getColor(R.color.colorError))
+                        binding.footer.setBackgroundColor(resources.getColor(R.color.colorError))
                     } else if (it.value.state == "Done") {
                         binding.lobbyFooter.visibility = View.VISIBLE
                         binding.activeFooter.visibility = View.GONE

@@ -1,6 +1,7 @@
 package com.namaya.oscarsthegrouch_app.ui.login
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -21,6 +22,7 @@ class AvatarListViewAdapter(
 
             Glide.with(viewBinding.root.context)
                 .load("http://10.0.2.2:8080$item")
+                .override(200, 200)
 //                .placeholder(R.drawable.avatar_placeholder)
 //                .error(R.drawable.avatar_error)
                 .circleCrop() // optional: for rounded avatars

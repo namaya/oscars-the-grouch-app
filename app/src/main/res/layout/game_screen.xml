@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:text="Game Name"
             android:textSize="36sp"
+            android:textColor="@color/colorPrimaryDark"
             />
     </LinearLayout>
 
@@ -71,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/startGameButton"
                 android:text="START GAME"
+                android:backgroundTint="@color/colorPrimary"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -82,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/addPlayerB"
                 android:text="ADD PLAYER"
+                android:backgroundTint="@color/colorPrimary"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/startGameButton"

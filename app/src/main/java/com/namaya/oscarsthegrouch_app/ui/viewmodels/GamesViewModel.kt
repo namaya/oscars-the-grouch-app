@@ -9,6 +9,7 @@ import com.namaya.oscarsthegrouch_app.api.GameRepository
 import com.namaya.oscarsthegrouch_app.model.Player
 import com.namaya.oscarsthegrouch_app.ui.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -79,9 +80,11 @@ class GamesViewModel @Inject constructor(
     }
 
     private val pollingIntervalMs: Long = 2000
+    private var pollingJob: Job? = null;
 
     fun fetchPlayersPoll(game: Game) {
-        viewModelScope.launch {
+        pollingJob?.cancel()
+        pollingJob = viewModelScope.launch {
             while (true) {
                 _players.value = try {
                     val data = game.getPlayers()

@@ -1,5 +1,6 @@
 package com.namaya.oscarsthegrouch_app.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -54,13 +55,16 @@ class UserViewModel @Inject constructor(
     val selectedAvatarUri: MutableLiveData<String> = MutableLiveData<String>()
 
     fun fetchAvatars() {
+        if (_avatars.value is UiState.Success) return
+
         _avatars.value = UiState.Loading
         viewModelScope.launch {
             _avatars.value = try {
+                Log.d("UserViewModel", "Fetching avatars")
                 val avatars = userRepository.listAvatars()
                 UiState.Success(avatars)
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("UserViewModel", "Error fetching avatars", e)
                 UiState.Error("Error loading avatars")
             }
         }

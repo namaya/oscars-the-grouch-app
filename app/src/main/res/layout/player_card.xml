@@ -27,6 +27,7 @@
         android:layout_weight="3"
         android:text="Player Name"
         android:textSize="24sp"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/avatarIV"
         />
@@ -46,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/baseline_add_task_24"
-            app:tint="@color/green"
+            app:tint="@color/colorSuccessLight"
             android:visibility="gone"
             />
     </FrameLayout>
@@ -59,6 +60,7 @@
         android:layout_weight="1"
         android:text="0"
         android:textSize="24dp"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintTop_toTopOf="@id/playerName"
         app:layout_constraintBottom_toBottomOf="@id/playerName"
         app:layout_constraintStart_toEndOf="@id/readyFL"

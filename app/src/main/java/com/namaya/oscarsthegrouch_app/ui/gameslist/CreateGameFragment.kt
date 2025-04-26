@@ -39,17 +39,10 @@ class CreateGameFragment: Fragment() {
             }
 
             gamesViewModel.createGame(userId, gameName)
-        }
 
-        gamesViewModel.selectedGame.observe(viewLifecycleOwner) {
-            when (it) {
-                is UiState.Success -> {
-                    val navController = findNavController()
-                    val action = CreateGameFragmentDirections.toGameHomeScreen()
-                    navController.navigate(action)
-                }
-                else -> {}
-            }
+            val navController = findNavController()
+            val action = CreateGameFragmentDirections.toGameHomeScreen()
+            navController.navigate(action)
         }
     }
 }
